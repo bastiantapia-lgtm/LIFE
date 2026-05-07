@@ -1,9 +1,7 @@
-// LIFE — Service Worker
-// Estrategia: Cache-first para assets, network-first para datos dinámicos
-const CACHE_VERSION = 'life-v1';
+// LIFE — Service Worker v2
+// network-first para HTML, cache-first para assets, stale-while-revalidate para fonts
+const CACHE_VERSION = 'life-v2';
 const CACHE_ASSETS = [
-  '/',
-  '/index.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
@@ -21,21 +19,22 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k))
-      )
-    )
+    Promise.all([
+      caches.keys().then((keys) =>
+        Promise.all(keys.filter((k) => k !== CACHE_VERSION).map((k) => caches.delete(k)))
+      ),
+      self.clients.claim(),
+    ])
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-  // Solo GET cache
   if (request.method !== 'GET') return;
-  // Network-first para Google Fonts (para no servir versión vieja)
-  if (request.url.includes('fonts.googleapis.com') || request.url.includes('fonts.gstatic.com')) {
+  const url = new URL(request.url);
+
+  // HTML / navigation: NETWORK-FIRST (always try fresh)
+  if (request.mode === 'navigate' || request.destination === 'document') {
     event.respondWith(
       fetch(request)
         .then((res) => {
@@ -43,17 +42,39 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_VERSION).then((c) => c.put(request, clone));
           return res;
         })
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request).then((c) => c || caches.match('/')))
     );
     return;
   }
-  // Cache-first para todo lo demás
+
+  // Google Fonts: stale-while-revalidate
+  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        const net = fetch(request).then((res) => {
+          const clone = res.clone();
+          caches.open(CACHE_VERSION).then((c) => c.put(request, clone));
+          return res;
+        }).catch(() => cached);
+        return cached || net;
+      })
+    );
+    return;
+  }
+
+  // Static assets: cache-first
   event.respondWith(
-    caches.match(request).then((cached) => cached || fetch(request).catch(() => caches.match('/')))
+    caches.match(request).then((cached) => cached || fetch(request).then((res) => {
+      if (res.ok && (request.destination === 'image' || request.destination === 'style' || request.destination === 'script')) {
+        const clone = res.clone();
+        caches.open(CACHE_VERSION).then((c) => c.put(request, clone));
+      }
+      return res;
+    }).catch(() => caches.match('/')))
   );
 });
 
-// Listener para futuras notificaciones push (Sesión 3)
+// Push notifications (ready for Session 3)
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'LIFE';
