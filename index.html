@@ -92,8 +92,24 @@
   --font-sans:'Inter',-apple-system,system-ui,sans-serif;
 }
 
-body{background:var(--body);display:flex;justify-content:center;min-height:100vh;font-family:var(--font-sans);padding:20px 0;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
-.phone{width:390px;min-height:844px;background:var(--bg);border-radius:44px;border:1px solid rgba(128,128,180,.15);overflow:hidden;position:relative;box-shadow:0 0 80px rgba(79,142,247,.07),0 40px 80px rgba(0,0,0,.5);}
+body{background:var(--body);display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:var(--font-sans);padding:20px 0;color:var(--text);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+.phone{width:390px;height:844px;max-height:calc(100vh - 40px);background:var(--bg);border-radius:44px;border:1px solid rgba(128,128,180,.15);overflow:hidden;position:relative;box-shadow:0 0 80px rgba(79,142,247,.07),0 40px 80px rgba(0,0,0,.5);}
+
+/* MOBILE — fullscreen without frame */
+@media (max-width: 768px), (max-height: 900px){
+  body{padding:0;align-items:stretch;justify-content:stretch;}
+  .phone{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;border-radius:0;border:none;box-shadow:none;}
+  .notch{display:none;}
+  .sbar{display:none;}
+}
+
+/* PWA STANDALONE (installed) — always fullscreen */
+@media (display-mode: standalone){
+  body{padding:0;align-items:stretch;justify-content:stretch;background:var(--bg);}
+  .phone{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;border-radius:0;border:none;box-shadow:none;}
+  .notch{display:none;}
+  .sbar{display:none;}
+}
 .notch{width:120px;height:34px;background:var(--body);border-radius:0 0 20px 20px;margin:0 auto;position:relative;z-index:10;}
 .sbar{display:flex;justify-content:space-between;padding:8px 28px 0;font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:-34px;position:relative;z-index:11;}
 
@@ -101,7 +117,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .view.active{display:flex;}
 
 /* ── HOME ── */
-.scroll{padding:24px 20px 110px;overflow-y:auto;flex:1;}
+.scroll{padding:calc(24px + env(safe-area-inset-top)) 20px calc(120px + env(safe-area-inset-bottom));overflow-y:auto;flex:1;}
 .header{margin-top:16px;margin-bottom:28px;}
 .gline{font-family:var(--font-mono);font-size:11px;color:var(--text-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px;font-weight:500;}
 .ldot{width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s ease-in-out infinite;}
@@ -160,7 +176,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .xpb{width:90px;height:3px;background:var(--scratch);border-radius:2px;overflow:hidden;}
 .xpf{height:100%;width:35%;background:linear-gradient(90deg,var(--gold),#FFD166);}
 .xpn{font-family:var(--font-mono);font-size:9px;color:var(--text-3);letter-spacing:.08em;font-weight:500;}
-.bnav{position:absolute;bottom:0;left:0;right:0;height:82px;background:var(--nav);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-around;padding:14px 0 0;z-index:50;transition:transform .3s cubic-bezier(.4,0,.2,1);}
+.bnav{position:absolute;bottom:0;left:0;right:0;height:82px;padding:14px 0 0;padding-bottom:env(safe-area-inset-bottom);height:calc(82px + env(safe-area-inset-bottom));background:var(--nav);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-around;z-index:50;transition:transform .3s cubic-bezier(.4,0,.2,1);}
 .bnav.hidden{transform:translateY(100%);}
 .ni{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;opacity:.4;transition:opacity .2s;flex:1;color:var(--text-3);}
 .ni.active{opacity:1;color:var(--blue);}
@@ -175,7 +191,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 #view-tree.reveal{animation:clipReveal .52s cubic-bezier(.4,0,.2,1) forwards;}
 @keyframes clipReveal{from{clip-path:circle(22px at var(--rx) var(--ry))}to{clip-path:circle(900px at var(--rx) var(--ry))}}
 
-.thead{display:flex;align-items:center;gap:10px;padding:56px 20px 10px;flex-shrink:0;}
+.thead{display:flex;align-items:center;gap:10px;padding:calc(56px + env(safe-area-inset-top)) 20px 10px;flex-shrink:0;}
 .bbtn{width:32px;height:32px;border-radius:9px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .bbtn svg{width:16px;height:16px;stroke:var(--dim);fill:none;stroke-width:2.5;}
 .thead-info{flex:1;}
@@ -218,7 +234,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .sheet-overlay{position:absolute;inset:0;z-index:399;display:none;}
 .sheet-overlay.open{display:block;}
 /* ── CALENDAR VIEW ── */
-.cal-head{padding:56px 20px 12px;flex-shrink:0;}
+.cal-head{padding:calc(56px + env(safe-area-inset-top)) 20px 12px;flex-shrink:0;}
 .cal-top-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .cal-bbtn{width:32px;height:32px;border-radius:9px;background:var(--card);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .cal-bbtn svg{width:16px;height:16px;stroke:var(--dim);fill:none;stroke-width:2.5;}
@@ -351,7 +367,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .sk-pomo-btn:active{transform:scale(.96);}
 
 /* ── SETTINGS VIEW ── */
-.set-head{display:flex;align-items:center;gap:12px;padding:56px 20px 20px;flex-shrink:0;border-bottom:1px solid var(--border);}
+.set-head{display:flex;align-items:center;gap:12px;padding:calc(56px + env(safe-area-inset-top)) 20px 20px;flex-shrink:0;border-bottom:1px solid var(--border);}
 .set-bbtn{width:34px;height:34px;border-radius:10px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-2);}
 .set-bbtn:hover{border-color:var(--border-strong);color:var(--text);}
 .set-bbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;}
@@ -359,7 +375,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .set-sub{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;font-weight:500;margin-bottom:2px;}
 .set-title{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.02em;}
 
-.set-body{flex:1;overflow-y:auto;padding:20px;padding-bottom:110px;}
+.set-body{flex:1;overflow-y:auto;padding:20px;padding-bottom:calc(110px + env(safe-area-inset-bottom));}
 .set-section{margin-bottom:28px;}
 .set-section-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-left:4px;}
 .set-section-ic{display:flex;align-items:center;justify-content:center;color:var(--text-2);}
@@ -481,7 +497,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 
 .chat-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;cursor:grab;flex-shrink:0;}
 .chat-head{display:flex;align-items:center;gap:10px;padding:10px 18px 14px;flex-shrink:0;border-bottom:1px solid var(--border);}
-#view-chat.expanded .chat-head{padding-top:50px;}
+#view-chat.expanded .chat-head{padding-top:calc(50px + env(safe-area-inset-top));}
 .chat-bbtn{width:32px;height:32px;border-radius:9px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-2);}
 .chat-bbtn:hover{border-color:var(--border-strong);color:var(--text);}
 .chat-bbtn svg{width:14px;height:14px;}
@@ -519,7 +535,7 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .chat-chip:hover{border-color:var(--blue);color:var(--blue);}
 
 /* Input bar */
-.chat-input-bar{display:flex;gap:8px;padding:12px 18px 18px;flex-shrink:0;align-items:center;}
+.chat-input-bar{display:flex;gap:8px;padding:12px 18px;padding-bottom:calc(18px + env(safe-area-inset-bottom));flex-shrink:0;align-items:center;}
 .chat-input{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:10px 14px;color:var(--text);font-family:var(--font-sans);font-size:13px;outline:none;letter-spacing:-.005em;}
 .chat-input::placeholder{color:var(--text-3);}
 .chat-input:focus{border-color:var(--blue);}
@@ -551,7 +567,13 @@ body{background:var(--body);display:flex;justify-content:center;min-height:100vh
 .pomo-min:hover{color:var(--text);}
 
 /* Pomodoro mini widget (when minimized) */
-.pomo-mini{position:absolute;top:90px;right:20px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:6px 12px;display:none;align-items:center;gap:6px;z-index:55;cursor:pointer;font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3);}
+.pomo-mini{position:absolute;top:calc(20px + env(safe-area-inset-top));right:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);padding:8px 14px;display:none;align-items:center;gap:8px;z-index:55;cursor:pointer;font-family:var(--font-mono);font-size:11px;color:var(--text);font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.4);transition:all .2s;letter-spacing:.02em;}
+.pomo-mini:hover{border-color:var(--blue);transform:scale(1.03);}
+.pomo-mini.show{display:flex;animation:miniSlide .3s cubic-bezier(.4,0,.2,1);}
+.pomo-mini.starting{border-color:var(--blue);box-shadow:0 0 0 3px rgba(110,159,255,.2),0 6px 20px rgba(0,0,0,.4);}
+.pomo-mini.pulse::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;flex-shrink:0;animation:dotPulse 1.5s ease-in-out infinite;}
+@keyframes miniSlide{from{opacity:0;transform:translateY(-8px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.4}}
 .pomo-mini.show{display:flex;}
 .pomo-mini:hover{transform:translateY(-1px);}
 @keyframes pomoPulse{0%,100%{box-shadow:0 4px 14px rgba(79,142,247,.5)}50%{box-shadow:0 4px 24px rgba(79,142,247,.85)}}
@@ -1215,24 +1237,24 @@ const SKILLS_DATA={
     criteria:{material:50,practice:30,project:0,explanation:0},
     desc:'Modelo relacional — tablas, claves primarias y foráneas. Antes de queries, entender los datos.',
     resources:[
-      {type:'colab',   icon:'💻',name:'SQLZoo Tutorial',           url:'https://sqlzoo.net/',                                                 meta:'Tutorial interactivo gratis'},
+      {type:'colab',   icon:'💻',name:'SQLBolt Tutorial',           url:'https://sqlbolt.com/',                                                 meta:'Tutorial interactivo gratis'},
       {type:'course',  icon:'🎓',name:'Khan Academy SQL',          url:'https://www.khanacademy.org/computing/computer-programming/sql',     meta:'Curso de intro'},
     ],
     tasks:[
       'Diseñar esquema de tienda (3 tablas con relaciones)',
       'Identificar PK y FK en un dataset real',
-      'Completar SQLZoo SELECT basics',
+      'Completar SQLBolt SELECT basics',
     ]},
   sq2:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
     desc:'SELECT, FROM, WHERE, ORDER BY. La base para responder el 80% de preguntas de negocio.',
     resources:[
-      {type:'practice',icon:'🏋',name:'SQLZoo SELECT Basics',      url:'https://sqlzoo.net/wiki/SELECT_basics',  meta:'Ejercicios interactivos'},
+      {type:'practice',icon:'🏋',name:'SQLBolt SELECT Basics',      url:'https://sqlbolt.com/lesson/select_queries_introduction',  meta:'Ejercicios interactivos'},
       {type:'course',  icon:'🎓',name:'Mode SQL Tutorial',         url:'https://mode.com/sql-tutorial/',          meta:'Tutorial profesional'},
       {type:'practice',icon:'🏋',name:'LeetCode SQL Easy',         url:'https://leetcode.com/problemset/database/?difficulty=EASY', meta:'Problems para practicar'},
     ],
     tasks:[
-      'Completar todos los ejercicios SELECT de SQLZoo',
+      'Completar todos los ejercicios SELECT de SQLBolt',
       '10 queries en LeetCode SQL Easy',
       'Análisis de ventas con WHERE + ORDER BY + LIMIT',
     ]},
@@ -1240,12 +1262,12 @@ const SKILLS_DATA={
     criteria:{material:0,practice:0,project:0,explanation:0},
     desc:'JOINs — donde SQL se vuelve poderoso. Combinar tablas es fundamental para análisis real.',
     resources:[
-      {type:'practice',icon:'🏋',name:'SQLZoo JOINs',              url:'https://sqlzoo.net/wiki/The_JOIN_operation', meta:'Ejercicios JOINs'},
+      {type:'practice',icon:'🏋',name:'SQLBolt JOINs',              url:'https://sqlbolt.com/lesson/select_queries_with_joins', meta:'Ejercicios JOINs'},
       {type:'colab',   icon:'💻',name:'Visual JOIN Types',         url:'https://joins.spathon.com/',                  meta:'Visualización interactiva'},
       {type:'practice',icon:'🏋',name:'LeetCode SQL JOIN problems',url:'https://leetcode.com/tag/database/',          meta:'Problems con JOINs'},
     ],
     tasks:[
-      'Resolver todos los JOINs de SQLZoo',
+      'Resolver todos los JOINs de SQLBolt',
       'Recrear pandas merge() en SQL equivalente',
       'Query con 3+ tablas para responder pregunta de negocio',
     ]},
@@ -1253,7 +1275,7 @@ const SKILLS_DATA={
     criteria:{material:0,practice:0,project:0,explanation:0},
     desc:'GROUP BY, HAVING, COUNT, SUM, AVG. La base de cualquier reporte.',
     resources:[
-      {type:'practice',icon:'🏋',name:'SQLZoo SUM and COUNT',      url:'https://sqlzoo.net/wiki/SUM_and_COUNT',                       meta:'Ejercicios agregación'},
+      {type:'practice',icon:'🏋',name:'SQLBolt SUM and COUNT',      url:'https://sqlbolt.com/lesson/select_queries_with_aggregates',                       meta:'Ejercicios agregación'},
       {type:'course',  icon:'🎓',name:'Mode Aggregate Functions',  url:'https://mode.com/sql-tutorial/sql-aggregate-functions/',      meta:'Tutorial Mode'},
     ],
     tasks:[
@@ -1575,16 +1597,16 @@ const NODE_DATA={
     res:[{t:'Real Python — Intro to Testing',u:'https://realpython.com/python-testing/',ic:'📄'},{t:'Pytest Official Docs',u:'https://docs.pytest.org/en/latest/getting-started.html',ic:'📄'}],
     tasks:['Escribir tests para las clases del ejercicio de POO','Alcanzar 80% de cobertura en un script con pytest-cov','Practicar TDD: primero el test, luego la implementación'],time:'10h'},
   sq1:{desc:'Antes de escribir queries, entender cómo están estructurados los datos relacionales. Tablas, claves primarias, claves foráneas y relaciones.',
-    res:[{t:'SQLZoo — Tutorial interactivo',u:'https://sqlzoo.net/',ic:'💻'},{t:'Khan Academy — Intro to SQL',u:'https://www.khanacademy.org/computing/computer-programming/sql',ic:'🎓'}],
-    tasks:['Diseñar esquema para base de datos de una tienda (3 tablas)','Identificar claves primarias y foráneas en un dataset real','Completar sección "SELECT basics" de SQLZoo'],time:'6–8h'},
+    res:[{t:'SQLBolt — Tutorial interactivo',u:'https://sqlbolt.com/',ic:'💻'},{t:'Khan Academy — Intro to SQL',u:'https://www.khanacademy.org/computing/computer-programming/sql',ic:'🎓'}],
+    tasks:['Diseñar esquema para base de datos de una tienda (3 tablas)','Identificar claves primarias y foráneas en un dataset real','Completar sección "SELECT basics" de SQLBolt'],time:'6–8h'},
   sq2:{desc:'El corazón de SQL: seleccionar, filtrar y ordenar datos. Con esto y JOINs puedes responder el 80% de preguntas de negocio.',
-    res:[{t:'SQLZoo — SELECT',u:'https://sqlzoo.net/wiki/SELECT_basics',ic:'💻'},{t:'Mode Analytics SQL Tutorial',u:'https://mode.com/sql-tutorial/',ic:'📄'}],
-    tasks:['Completar todos los ejercicios SELECT de SQLZoo','Escribir 10 queries sobre un dataset real (ej: Chinook DB)','Combinar WHERE + ORDER BY + LIMIT para análisis de ventas'],time:'8h'},
+    res:[{t:'SQLBolt — Lesson 1: SELECT',u:'https://sqlbolt.com/lesson/select_queries_introduction',ic:'💻'},{t:'Mode Analytics SQL Tutorial',u:'https://mode.com/sql-tutorial/',ic:'📄'}],
+    tasks:['Completar todos los ejercicios SELECT de SQLBolt','Escribir 10 queries sobre un dataset real (ej: Chinook DB)','Combinar WHERE + ORDER BY + LIMIT para análisis de ventas'],time:'8h'},
   sq3:{desc:'JOINs son donde SQL se vuelve poderoso. Inner, Left, Right, Full Outer — aprender a combinar tablas es fundamental para análisis real.',
-    res:[{t:'SQLZoo — JOINs',u:'https://sqlzoo.net/wiki/The_JOIN_operation',ic:'💻'},{t:'Visual Join Types',u:'https://joins.spathon.com/',ic:'💻'}],
-    tasks:['Resolver los ejercicios de JOINs de SQLZoo completos','Recrear un pandas merge() en SQL con JOIN equivalente','Escribir query que combine 3 tablas para responder pregunta de negocio'],time:'10h'},
+    res:[{t:'SQLBolt — JOINs',u:'https://sqlbolt.com/lesson/select_queries_with_joins',ic:'💻'},{t:'Visual Join Types',u:'https://joins.spathon.com/',ic:'💻'}],
+    tasks:['Resolver los ejercicios de JOINs de SQLBolt completos','Recrear un pandas merge() en SQL con JOIN equivalente','Escribir query que combine 3 tablas para responder pregunta de negocio'],time:'10h'},
   sq4:{desc:'Agregaciones para analizar volúmenes de datos: GROUP BY, HAVING, COUNT, SUM, AVG. La base de cualquier reporte de negocio.',
-    res:[{t:'SQLZoo — SUM and COUNT',u:'https://sqlzoo.net/wiki/SUM_and_COUNT',ic:'💻'},{t:'Mode — Aggregate Functions',u:'https://mode.com/sql-tutorial/sql-aggregate-functions/',ic:'📄'}],
+    res:[{t:'SQLBolt — SUM and COUNT',u:'https://sqlbolt.com/lesson/select_queries_with_aggregates',ic:'💻'},{t:'Mode — Aggregate Functions',u:'https://mode.com/sql-tutorial/sql-aggregate-functions/',ic:'📄'}],
     tasks:['Analizar ventas por categoría, mes y región con GROUP BY','Usar HAVING para filtrar grupos (ej: clientes con más de 5 compras)','Replicar una tabla resumen de negocio real usando solo SQL'],time:'8h'},
   sq5:{desc:'CTEs (Common Table Expressions) y subconsultas para queries complejas y legibles. Código SQL limpio como código Python limpio.',
     res:[{t:'Mode — CTEs Tutorial',u:'https://mode.com/sql-tutorial/sql-with-as/',ic:'📄'},{t:'PostgreSQL Docs — WITH',u:'https://www.postgresql.org/docs/current/queries-with.html',ic:'📄'}],
@@ -3184,10 +3206,28 @@ function startPomodoro(kind){
   POMO.cycle=1;
   POMO.config=Object.assign({},SETTINGS.pomodoro);
   POMO.endsAt=Date.now()+POMO.config.focusMin*60*1000;
+  // Save the title for later use in mini widget / overlay
+  for(const ak in BRANCHES){
+    for(const br of BRANCHES[ak]){
+      const f=br.nodes.find(n=>n.id===POMO.nodeId);
+      if(f){POMO.title=f.full;break;}
+    }
+  }
   savePomo();
   closeSheet();
-  showPomoOverlay();
+  // Brief confirmation flash, then go straight to minimized mini-widget
+  showPomoStart();
   startPomoTick();
+}
+
+function showPomoStart(){
+  // Quick toast confirming pomodoro started, then go to mini
+  const m=document.getElementById('pomo-mini');
+  m.classList.add('show','pulse','starting');
+  document.getElementById('pomo-mini-emoji').innerHTML=icon(POMO.kind==='material'?'book':'terminal',12);
+  showToast(`Pomodoro iniciado · ${POMO.config.focusMin}min de foco`);
+  // Remove the "starting" highlight after a moment
+  setTimeout(()=>m.classList.remove('starting'),2000);
 }
 
 function showPomoOverlay(){
