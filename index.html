@@ -110,6 +110,63 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
   .notch{display:none;}
   .sbar{display:none;}
 }
+
+/* ─── DESKTOP SIDEBAR (hidden by default, shown on wide screens) ─── */
+.dnav{display:none;position:absolute;left:0;top:0;bottom:0;width:240px;flex-direction:column;background:var(--body);border-right:1px solid var(--border);padding:32px 14px 18px;z-index:48;}
+.dnav-brand{display:flex;align-items:center;gap:11px;margin-bottom:32px;padding:0 8px;}
+.dnav-brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#A78BFA);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(110,159,255,.25);}
+.dnav-brand-mark svg{width:18px;height:18px;}
+.dnav-brand-text{font-size:18px;font-weight:800;letter-spacing:-.025em;color:var(--text);}
+.dnav-items{display:flex;flex-direction:column;gap:3px;flex:1;}
+.dnav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13.5px;color:var(--text-2);font-weight:500;transition:background .15s,color .15s;letter-spacing:-.005em;user-select:none;}
+.dnav-item:hover{background:var(--surface);color:var(--text);}
+.dnav-item.active{background:var(--surface);color:var(--blue);}
+.dnav-item.active .dnav-item-ic{color:var(--blue);}
+.dnav-item-ic{display:flex;align-items:center;justify-content:center;color:var(--text-3);width:18px;height:18px;}
+.dnav-item-ic svg{width:18px;height:18px;}
+.dnav-footer{padding-top:14px;border-top:1px solid var(--border);}
+.dnav-account{display:flex;align-items:center;gap:10px;padding:6px 8px;}
+.dnav-account-ic{width:30px;height:30px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--text-2);flex-shrink:0;}
+.dnav-account-name{font-size:12.5px;color:var(--text);font-weight:600;}
+.dnav-account-meta{font-family:var(--font-mono);font-size:9px;color:var(--text-3);letter-spacing:.05em;margin-top:1px;}
+
+/* ─── DESKTOP WIDE — sidebar layout ─── */
+@media (min-width: 1024px) and (min-height: 700px){
+  body{padding:0;align-items:stretch;justify-content:stretch;background:var(--body);}
+  .phone{width:100vw;height:100vh;max-width:none;max-height:none;border-radius:0;border:none;box-shadow:none;background:var(--bg);}
+  .notch,.sbar{display:none;}
+  .dnav{display:flex;}
+  .bnav{display:none !important;}
+
+  /* All views shifted to leave room for sidebar */
+  .view{left:240px;}
+
+  /* Home content centered with max-width */
+  .scroll{max-width:820px;margin:0 auto;padding:48px 32px 60px;}
+
+  /* Tree view — uses the wider canvas */
+  .tcanvas{padding:0 32px 32px;}
+
+  /* Settings centered */
+  .set-body{max-width:780px;margin:0 auto;}
+
+  /* Calendar uses the available width */
+  #view-cal .cal-body{padding:0 32px 32px;}
+
+  /* Chat: not a sheet anymore, full panel */
+  #view-chat{position:absolute;left:240px;right:0;top:0;bottom:0;height:100% !important;border-radius:0;border-top:none;}
+  #view-chat .chat-handle{display:none;}
+  #view-chat .chat-expand-btn{display:none;}
+  #view-chat .chat-body{max-width:780px;margin:0 auto;width:100%;}
+  #view-chat .chat-input-bar{max-width:780px;margin:0 auto;width:100%;}
+  #view-chat .chat-chips-row{max-width:780px;margin:0 auto;width:100%;}
+
+  /* Pomo mini repositioned */
+  .pomo-mini{top:24px;right:32px;}
+
+  /* Toast positions */
+  .toast{left:auto;right:32px;transform:none;}
+}
 .notch{width:120px;height:34px;background:var(--body);border-radius:0 0 20px 20px;margin:0 auto;position:relative;z-index:10;}
 .sbar{display:flex;justify-content:space-between;padding:8px 28px 0;font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:-34px;position:relative;z-index:11;}
 
@@ -585,6 +642,40 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
   <div class="notch"></div>
   <div class="sbar"><span id="clock">08:42</span><span>▲▲▲ 🔋</span></div>
 
+  <!-- Desktop sidebar (only visible on wide screens) -->
+  <aside class="dnav" id="dnav">
+    <div class="dnav-brand">
+      <div class="dnav-brand-mark"><span id="dnav-brand-ic"></span></div>
+      <div class="dnav-brand-text">LIFE</div>
+    </div>
+    <div class="dnav-items">
+      <div class="dnav-item active" id="dni-home" onclick="goHome()">
+        <span class="dnav-item-ic" id="dni-ic-home"></span><span>Hoy</span>
+      </div>
+      <div class="dnav-item" id="dni-tree" onclick="openTree('overview')">
+        <span class="dnav-item-ic" id="dni-ic-tree"></span><span>Árbol</span>
+      </div>
+      <div class="dnav-item" id="dni-cal" onclick="openCal()">
+        <span class="dnav-item-ic" id="dni-ic-cal"></span><span>Agenda</span>
+      </div>
+      <div class="dnav-item" id="dni-chat" onclick="openChat()">
+        <span class="dnav-item-ic" id="dni-ic-chat"></span><span>Chat</span>
+      </div>
+      <div class="dnav-item" id="dni-set" onclick="openSettings()">
+        <span class="dnav-item-ic" id="dni-ic-set"></span><span>Ajustes</span>
+      </div>
+    </div>
+    <div class="dnav-footer">
+      <div class="dnav-account">
+        <span class="dnav-account-ic" id="dnav-account-ic"></span>
+        <div>
+          <div class="dnav-account-name" id="dnav-account-name">Bastian</div>
+          <div class="dnav-account-meta">v0.1 · prototipo</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
   <!-- HOME -->
   <div id="view-home" class="view active" style="flex-direction:column;">
     <div class="scroll" id="home-scroll">
@@ -914,14 +1005,39 @@ function initIcons(){
   set('pomo-toggle-ic','pause',12);
   set('pomo-min-ic','minimize',12);
   set('ficon','type',14);
-  // Bottom nav
+  // Bottom nav (mobile)
   set('ni-ic-home','home',22);
   set('ni-ic-tree','tree',22);
   set('ni-ic-cal','calendar',22);
   set('ni-ic-chat','chat',22);
   set('ni-ic-set','settings',22);
+  // Desktop sidebar
+  set('dnav-brand-ic','star',18);
+  set('dni-ic-home','home',18);
+  set('dni-ic-tree','tree',18);
+  set('dni-ic-cal','calendar',18);
+  set('dni-ic-chat','chat',18);
+  set('dni-ic-set','settings',18);
+  set('dnav-account-ic','user',16);
 }
 window.addEventListener('DOMContentLoaded',initIcons);
+
+/* Desktop sidebar: navigate home + sync active state */
+function goHome(){
+  document.getElementById('view-tree').classList.remove('active');
+  document.getElementById('view-cal').classList.remove('active');
+  document.getElementById('view-chat').classList.remove('active','expanded');
+  document.getElementById('view-settings').classList.remove('active');
+  document.getElementById('view-home').classList.add('active');
+  closeSheet();
+  updateDnavActive('home');
+}
+function updateDnavActive(key){
+  document.querySelectorAll('.dnav-item').forEach(el=>el.classList.remove('active'));
+  const map={home:'dni-home',tree:'dni-tree',cal:'dni-cal',chat:'dni-chat',settings:'dni-set'};
+  const id=map[key];
+  if(id){const el=document.getElementById(id);if(el)el.classList.add('active');}
+}
 
 /* CLOCK */
 function tick(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');document.getElementById('gtext').textContent=n.getHours()<12?'Buen día':n.getHours()<20?'Buenas tardes':'Buenas noches';const D=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],M=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];document.getElementById('dlabel').textContent=D[n.getDay()]+', '+n.getDate()+' de '+M[n.getMonth()];}
@@ -2153,6 +2269,9 @@ function closeSheet(){
 /* ═══════════ OPEN / CLOSE TREE ═══════════ */
 function openTree(key){
   document.getElementById('view-home').classList.remove('active');
+  document.getElementById('view-cal').classList.remove('active');
+  document.getElementById('view-chat').classList.remove('active','expanded');
+  document.getElementById('view-settings').classList.remove('active');
   const vt=document.getElementById('view-tree');
   vt.classList.add('active');
   vt.style.clipPath='';
@@ -2166,6 +2285,7 @@ function openTree(key){
   document.getElementById('back-pill').classList.remove('show');
   closeSheet();
   curMode='overview';
+  updateDnavActive('tree');
 
   if(key&&key!=='overview'){
     // Zoom in after 1 frame so SVG is positioned
@@ -2177,6 +2297,7 @@ function closeTree(){
   document.getElementById('view-tree').classList.remove('active');
   document.getElementById('view-home').classList.add('active');
   closeSheet();
+  updateDnavActive('home');
 }
 /* ═══════════════════════════════════
    CALENDAR ENGINE
@@ -2630,16 +2751,20 @@ function showToast(msg){
 function openCal(){
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-tree').classList.remove('active');
+  document.getElementById('view-chat').classList.remove('active','expanded');
+  document.getElementById('view-settings').classList.remove('active');
   document.getElementById('view-cal').classList.add('active');
   loadEvents();
   calCursor=new Date();
   calMode='week';
   renderCal();
+  updateDnavActive('cal');
 }
 function closeCal(){
   document.getElementById('view-cal').classList.remove('active');
   document.getElementById('view-home').classList.add('active');
   closeSheet();
+  updateDnavActive('home');
 }
 
 // Enter key in chat input
@@ -2678,13 +2803,16 @@ function openSettings(){
   document.getElementById('view-home').classList.remove('active');
   document.getElementById('view-tree').classList.remove('active');
   document.getElementById('view-cal').classList.remove('active');
+  document.getElementById('view-chat').classList.remove('active','expanded');
   document.getElementById('view-settings').classList.add('active');
   closeSheet();
   renderSettings();
+  updateDnavActive('settings');
 }
 function closeSettings(){
   document.getElementById('view-settings').classList.remove('active');
   document.getElementById('view-home').classList.add('active');
+  updateDnavActive('home');
 }
 
 /* ═══════════════════════════════════
@@ -2728,10 +2856,12 @@ function openChat(){
   document.getElementById('chat-send-ic').innerHTML=icon('arrowRight',14);
   renderChatBody();
   setTimeout(()=>document.getElementById('chat-input').focus(),300);
+  updateDnavActive('chat');
 }
 function closeChat(){
   document.getElementById('view-chat').classList.remove('active','expanded');
   document.getElementById('view-home').classList.add('active');
+  updateDnavActive('home');
 }
 function toggleChatExpand(){
   const v=document.getElementById('view-chat');
