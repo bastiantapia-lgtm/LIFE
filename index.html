@@ -96,7 +96,7 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 .phone{width:390px;height:844px;max-height:calc(100vh - 40px);background:var(--bg);border-radius:44px;border:1px solid rgba(128,128,180,.15);overflow:hidden;position:relative;box-shadow:0 0 80px rgba(79,142,247,.07),0 40px 80px rgba(0,0,0,.5);}
 
 /* MOBILE — fullscreen without frame */
-@media (max-width: 768px), (max-height: 900px){
+@media (max-width: 899px){
   body{padding:0;align-items:stretch;justify-content:stretch;}
   .phone{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;border-radius:0;border:none;box-shadow:none;}
   .notch{display:none;}
@@ -131,13 +131,15 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 .dnav-account-meta{font-family:var(--font-mono);font-size:9px;color:var(--text-3);letter-spacing:.05em;margin-top:1px;}
 
 /* ─── DESKTOP WIDE — sidebar layout ─── */
-@media (min-width: 1024px) and (min-height: 700px){
+@media (min-width: 900px){
   body{padding:0;align-items:stretch;justify-content:stretch;background:var(--body);}
   .phone{width:100vw;height:100vh;max-width:none;max-height:none;border-radius:0;border:none;box-shadow:none;background:var(--bg);}
   .notch,.sbar{display:none;}
   .dnav{display:flex;}
   .bnav{display:none !important;}
 
+  /* Force all views to respect sidebar — IDs override class specificity */
+  #view-home, #view-tree, #view-cal, #view-settings{left:240px !important;}
   /* All views shifted to leave room for sidebar */
   .view{left:240px;}
 
@@ -151,8 +153,13 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
   #tsvg{max-width:720px;width:100%;height:100%;}
 
   /* ─ CALENDAR: center content, limit width, fix horizontal scroll ─ */
-  .cal-head{max-width:840px;margin:0 auto;padding-left:40px;padding-right:40px;width:100%;}
-  .cal-body{max-width:840px;margin:0 auto;padding-left:40px;padding-right:40px;width:100%;}
+  .cal-head{padding-left:40px;padding-right:40px;width:100%;box-sizing:border-box;max-width:none;margin:0;}
+  .cal-body{padding-left:40px;padding-right:40px;padding-bottom:60px;width:100%;box-sizing:border-box;max-width:none;margin:0;overflow-x:hidden;}
+  /* Postit row: no negative margins, wrap on desktop */
+  .cal-postit-row{margin:0 !important;padding:0 !important;overflow-x:hidden !important;flex-wrap:wrap;}
+  .cal-postit{min-width:180px;flex:0 0 auto;}
+  /* FAB inside view area */
+  .cal-fab{right:40px;bottom:40px;}
   /* Override negative margins from mobile rail */
   .cal-postit-row{margin:0 !important;padding-left:0 !important;padding-right:0 !important;overflow-x:visible !important;flex-wrap:wrap;}
   .cal-postit{min-width:200px;flex:0 0 auto;}
@@ -2195,10 +2202,10 @@ function drawOverview(){
   return s;
 }
 
-/* ═══════════ AREA DRAW (ADAPTIVE) ═══════════
-   Reads container dimensions and lays out proportionally.
-   Updates SVG viewBox to match real space available.
-═══════════════════════════════════ */
+/* ═══════════ AREA DRAW — PROFESSIONAL ═══════════
+   Typography and radii in fixed px.
+   Only spacing is dynamic (fills available H).
+═══════════════════════════════════════════════ */
 
 function drawArea(key){
   measureCanvas();
@@ -2207,158 +2214,158 @@ function drawArea(key){
   const branches=BRANCHES[key].slice(0,4);
   const color=A.color;
 
-  // Update viewBox to match real container
   const svgEl=document.getElementById('tsvg');
   if(svgEl) svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
 
-  // Proportional layout
-  const stripW=W/4;
-  const COLS=[stripW*0.5*0.75, stripW*1.5*0.92, stripW*2.5*1.08, stripW*3.5*1.07/3.5]; // recompute below
-  // Cleaner: columns slightly biased outward for cleaner bezier arcs
-  const c0=stripW*0.37, c1=stripW*1.32, c2=W-stripW*1.32, c3=W-stripW*0.37;
-  const COLS2=[c0,c1,c2,c3];
+  // ── FIXED PROFESSIONAL CONSTANTS ──────────────────
+  const TITLE_H = 46;     // header bar height (px, fixed)
+  const NR      = 14;     // node circle radius (px, fixed)
+  const LABEL_FS= 10.5;   // node label font size (px, fixed)
+  const HEAD_FS = 10;     // branch title font size (px, fixed)
+  const ROOT_R  = 22;     // root node radius (px, fixed)
+  const WM_SZ   = 52;     // watermark icon size (px, fixed)
 
-  // Vertical zones (proportional)
-  const TITLE_H=H*0.12;        // title zone height
-  const NODE_TOP=H*0.155;      // first node y
-  const NODE_BOT=H*0.66;       // last node y (closest to root)
-  const ROOT_Y=H*0.82;         // root center
-  const ROOT_FADE=H*0.71;      // where strips fade into arc
-  const NR=Math.max(13,Math.min(18,W*0.045)); // node radius scales with width
-  const D_STEP=(NODE_BOT-NODE_TOP)/6; // 7 nodes evenly distributed
+  // ── COLUMN LAYOUT ─────────────────────────────────
+  const stripW  = Math.min(W/4, 180); // max 180px per column
+  const totalW  = stripW*4;
+  const ox      = (W-totalW)/2;       // center columns horizontally
+  // Column centers (slightly biased inward for cleaner bezier arcs)
+  const COLS=[ox+stripW*0.5, ox+stripW*1.5, ox+stripW*2.5, ox+stripW*3.5];
 
-  // Sun arc parameters
-  const SUN_CY=H*1.32;
-  const SUN_R=H*0.56;
+  // ── VERTICAL LAYOUT — root ANCHORED at bottom ─────
+  // Nodes fill ALL available space from header to root. Arc goes off-screen.
+  const ROOT_Y   = H - 40;                     // always near bottom
+  const ROOT_GAP = 28;                          // gap between last node and root edge
+  const NODE_BOT = ROOT_Y - ROOT_R - ROOT_GAP; // bottom node center
+  const NODE_TOP = TITLE_H + 14 + NR;          // top node center
+  const maxNodes = Math.max(...branches.map(b=>b.nodes.length));
+  const availH   = NODE_BOT - NODE_TOP;
+  // Fill ALL available space (no aggressive cap — let nodes breathe)
+  const D_STEP   = Math.min(70, Math.max(22, availH / Math.max(1, maxNodes-1)));
+  const FADE_Y   = ROOT_Y - ROOT_R - 12;
+
+  // Sun arc: center well below screen — only the very top of arc is visible
+  const SUN_R    = totalW * 0.48;
+  const SUN_CY   = ROOT_Y + ROOT_R + SUN_R * 0.88;
 
   let s='';
 
-  // ── Sun arc ──
-  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R}" fill="${color}" opacity="0.05"/>`;
-  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R}" fill="none" stroke="${color}" stroke-width="2.2" opacity="0.18"/>`;
-  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R*0.88}" fill="none" stroke="${color}" stroke-width="0.8" opacity="0.07"/>`;
-  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R*0.74}" fill="none" stroke="${color}" stroke-width="0.5" opacity="0.04"/>`;
+  // ── SUN ARC ───────────────────────────────────────
+  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R}" fill="${color}" opacity="0.04"/>`;
+  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.14"/>`;
+  s+=`<circle cx="${W/2}" cy="${SUN_CY}" r="${SUN_R*0.84}" fill="none" stroke="${color}" stroke-width="0.6" opacity="0.06"/>`;
 
-  // ── Strips ──
+  // ── STRIP BACKGROUNDS ─────────────────────────────
   branches.forEach((br,bi)=>{
-    if(bi>=4)return;
-    const sx=stripW*bi, sw=stripW;
-    const cx=COLS2[bi];
+    const sx=ox+stripW*bi;
     const hc=br.col||color;
+    s+=`<rect x="${sx}" y="0" width="${stripW}" height="${FADE_Y}" fill="${hc}" opacity="0.05" rx="0"/>`;
+    // Gradient fade at bottom of strip
+    s+=`<rect x="${sx}" y="${FADE_Y-24}" width="${stripW}" height="24" fill="var(--bg)" opacity="0.55"/>`;
+    // Top accent line
+    s+=`<rect x="${sx}" y="0" width="${stripW}" height="3" fill="${hc}" opacity="0.7"/>`;
+    // Column separator
+    if(bi<3) s+=`<line x1="${ox+stripW*(bi+1)}" y1="0" x2="${ox+stripW*(bi+1)}" y2="${FADE_Y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
 
-    // Strip background
-    s+=`<rect x="${sx}" y="0" width="${sw}" height="${ROOT_FADE}" fill="${hc}" opacity="0.055"/>`;
-    // Fade into arc zone
-    s+=`<rect x="${sx}" y="${ROOT_FADE-30}" width="${sw}" height="30" fill="var(--bg)" opacity="0.6"/>`;
-    // Top accent
-    s+=`<rect x="${sx}" y="0" width="${sw}" height="4" fill="${hc}" opacity="0.65"/>`;
-    // Right separator
-    if(bi<3) s+=`<line x1="${stripW*(bi+1)}" y1="0" x2="${stripW*(bi+1)}" y2="${ROOT_FADE}" stroke="${hc}" stroke-width="0.5" opacity="0.18"/>`;
-
-    // Big SVG icon watermark — centered in node zone (translucent)
-    const iconName=BRANCH_ICONS[br.name]||'target';
-    const short=BSHORT[br.name]||br.name;
+    // Watermark icon — centered vertically in node zone, very subtle
     const wmY=NODE_TOP+(NODE_BOT-NODE_TOP)*0.5;
-    s+=iconInSvg(iconName,cx,wmY,stripW*0.95,hc,0.07,0.8);
+    const iconName=BRANCH_ICONS[br.name]||'target';
+    s+=iconInSvg(iconName,COLS[bi],wmY,WM_SZ,hc,0.05,0.6);
 
-    // Title block: small SVG icon above + title + count
-    s+=iconInSvg(iconName,cx,TITLE_H*0.3,stripW*0.18,hc,0.85,1.5);
-    const tfs=short.length>9?stripW*0.085:stripW*0.1;
-    s+=`<text x="${cx}" y="${TITLE_H*0.62}" text-anchor="middle" `+
-       `font-family="Geist Mono,ui-monospace,monospace" font-size="${tfs}" font-weight="700" `+
-       `fill="${hc}" letter-spacing="0.5" opacity="0.95">${short.toUpperCase()}</text>`;
-    s+=`<text x="${cx}" y="${TITLE_H*0.82}" text-anchor="middle" `+
-       `font-family="Geist Mono,ui-monospace,monospace" font-size="${stripW*0.075}" `+
-       `fill="${hc}" opacity="0.5">${br.nodes.length} skills</text>`;
-    s+=`<line x1="${sx+8}" y1="${TITLE_H}" x2="${sx+sw-8}" y2="${TITLE_H}" stroke="${hc}" stroke-width="0.7" opacity="0.3"/>`;
+    // ── HEADER ROW ────────────────────────────────
+    const short=BSHORT[br.name]||br.name;
+    const cx=COLS[bi];
+    // Icon (small, left-of-text feel)
+    s+=iconInSvg(iconName,cx,TITLE_H*0.38,16,hc,0.9,1.5);
+    // Branch name
+    s+=`<text x="${cx}" y="${TITLE_H*0.68}" text-anchor="middle" `+
+       `font-family="Geist Mono,ui-monospace,monospace" font-size="${HEAD_FS}" font-weight="700" `+
+       `fill="${hc}" letter-spacing="0.8" style="pointer-events:none">${short.toUpperCase()}</text>`;
+    // Skills count
+    s+=`<text x="${cx}" y="${TITLE_H*0.86}" text-anchor="middle" `+
+       `font-family="Geist Mono,ui-monospace,monospace" font-size="9" `+
+       `fill="${hc}" opacity="0.45" style="pointer-events:none">${br.nodes.length} skills</text>`;
+    // Separator line
+    s+=`<line x1="${sx+8}" y1="${TITLE_H}" x2="${sx+stripW-8}" y2="${TITLE_H}" stroke="${hc}" stroke-width="0.6" opacity="0.25"/>`;
   });
 
-  // ── Big root node ──
-  const rootR=NR*2;
-  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${rootR*1.8}" fill="${color}" opacity="0.05" style="animation:ndGlow 3s ease-in-out infinite"/>`;
-  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${rootR*1.45}" fill="${color}" opacity="0.1"/>`;
-  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${rootR*1.18}" fill="none" stroke="${color}" stroke-width="1" opacity="0.25"/>`;
-  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${rootR}" fill="${color}" opacity="0.32" stroke="${color}" stroke-width="3" style="filter:drop-shadow(0 0 8px ${color}aa)"/>`;
-  // Root icon (replaces emoji)
-  s+=iconInSvg(A.iconName||'target',W/2,ROOT_Y-rootR*0.15,rootR*0.85,'white',0.95,1.5);
-  s+=`<text x="${W/2}" y="${ROOT_Y+rootR*0.6}" text-anchor="middle" font-size="${rootR*0.32}" `+
-     `font-family="Geist Mono,ui-monospace,monospace" fill="white" font-weight="700" opacity="0.9" style="pointer-events:none">${A.pct}</text>`;
+  // ── ROOT NODE ─────────────────────────────────────
+  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${ROOT_R*1.7}" fill="${color}" opacity="0.04" style="animation:ndGlow 3s ease-in-out infinite"/>`;
+  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${ROOT_R*1.3}" fill="${color}" opacity="0.09"/>`;
+  s+=`<circle cx="${W/2}" cy="${ROOT_Y}" r="${ROOT_R}" fill="${color}" opacity="0.85" stroke="${color}" stroke-width="2.5" style="filter:drop-shadow(0 0 8px ${color}88)"/>`;
+  s+=iconInSvg(A.iconName||'target',W/2,ROOT_Y-2,ROOT_R*0.85,'white',0.95,1.6);
+  s+=`<text x="${W/2}" y="${ROOT_Y+ROOT_R+13}" text-anchor="middle" `+
+     `font-family="Geist Mono,ui-monospace,monospace" font-size="10" fill="${color}" font-weight="700" opacity="0.8" style="pointer-events:none">${A.pct}</text>`;
 
-  // ── Position map for prereqs ──
+  // ── POSITION MAP (for prereqs + bezier anchors) ───
   const posMap={};
   branches.forEach((br,bi)=>{
-    if(bi>=4)return;
     br.nodes.forEach((nd,ni)=>{
       const ny=NODE_BOT-ni*D_STEP;
-      posMap[nd.id]={x:COLS2[bi],y:ny,bi};
+      posMap[nd.id]={x:COLS[bi],y:ny,bi};
     });
   });
 
-  // ── Prereq arcs ──
+  // ── PREREQ ARCS ───────────────────────────────────
   (PREREQS[key]||[]).forEach(pr=>{
     const a=posMap[pr.f],b=posMap[pr.t];
     if(!a||!b||a.bi===b.bi)return;
-    const mx=(a.x+b.x)/2, cy2=Math.min(a.y,b.y)-D_STEP*0.7;
+    const mx=(a.x+b.x)/2, cy2=Math.min(a.y,b.y)-D_STEP*0.6;
     s+=`<path d="M${a.x},${a.y} Q${mx},${cy2} ${b.x},${b.y}" `+
-       `fill="none" stroke="${color}" stroke-width="1.4" stroke-dasharray="5,4" `+
-       `opacity="0.32" stroke-linecap="round"/>`;
-    s+=`<circle cx="${b.x}" cy="${b.y}" r="3.5" fill="${color}" opacity="0.35"/>`;
+       `fill="none" stroke="${color}" stroke-width="1.2" stroke-dasharray="4,4" `+
+       `opacity="0.28" stroke-linecap="round"/>`;
   });
 
-  // ── Branches ──
+  // ── BRANCHES + NODES ──────────────────────────────
   branches.forEach((br,bi)=>{
     if(bi>=4)return;
-    const cx=COLS2[bi];
+    const cx=COLS[bi];
     const nc=Math.min(br.nodes.length,7);
-    const topY=NODE_BOT-(nc-1)*D_STEP;
     const botY=NODE_BOT;
+    const topY=NODE_BOT-(nc-1)*D_STEP;
     const hc=br.col||color;
 
-    // Bezier from root edge to column base
+    // Bezier connector: root → column base
     const dx=cx-W/2;
-    const c1x=W/2+dx*0.65, c1y=ROOT_Y-rootR*0.9;
-    const c2x=cx, c2y=botY+D_STEP*1.2;
-    s+=`<path d="M${W/2},${ROOT_Y-rootR} C${c1x},${c1y} ${c2x},${c2y} ${cx},${botY}" `+
-       `fill="none" stroke="${hc}" stroke-width="2" opacity="0.32" stroke-linecap="round"/>`;
-    // Trunk
-    s+=`<line x1="${cx}" y1="${topY}" x2="${cx}" y2="${botY}" stroke="${hc}" stroke-width="1.2" opacity="0.16"/>`;
+    const c1x=W/2+dx*0.6, c1y=ROOT_Y-ROOT_R*0.85;
+    const c2x=cx, c2y=botY+D_STEP;
+    s+=`<path d="M${W/2},${ROOT_Y-ROOT_R} C${c1x},${c1y} ${c2x},${c2y} ${cx},${botY}" `+
+       `fill="none" stroke="${hc}" stroke-width="1.8" opacity="0.28" stroke-linecap="round"/>`;
+    // Vertical trunk
+    s+=`<line x1="${cx}" y1="${topY}" x2="${cx}" y2="${botY}" stroke="${hc}" stroke-width="1" opacity="0.12"/>`;
 
     br.nodes.forEach((nd,ni)=>{
       if(ni>=7)return;
       const ny=NODE_BOT-ni*D_STEP;
-      const dly=((bi*0.06)+(ni*0.04)).toFixed(2);
-      const nc2=hc;
+      const delay=((bi*0.05)+(ni*0.035)).toFixed(2);
 
-      // Tap zone
-      s+=`<circle cx="${cx}" cy="${ny}" r="${NR+14}" fill="transparent" style="cursor:pointer" `+
-         `onclick="nodeClick('${nd.id}','${nd.s}','${nd.full.replace(/'/g,"\\'")}','${nc2}')"/>`;
+      // Tap zone (invisible, just for click)
+      s+=`<circle cx="${cx}" cy="${ny}" r="${NR+12}" fill="transparent" style="cursor:pointer" `+
+         `onclick="nodeClick('${nd.id}','${nd.s}','${nd.full.replace(/'/g,"\\'")}','${hc}')"/>`;
 
       const gs=`transform-box:fill-box;transform-origin:${cx}px ${ny}px;opacity:0;`+
-               `animation:ndEnter .4s cubic-bezier(.34,1.4,.64,1) ${dly}s forwards`;
+               `animation:ndEnter .4s cubic-bezier(.34,1.4,.64,1) ${delay}s forwards`;
       s+=`<g style="${gs}">`;
 
       if(nd.s==='done'){
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR+6}" fill="${nc2}" opacity="0.1"/>`;
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="${nc2}" `+
-           `style="filter:drop-shadow(0 0 6px ${nc2}aa);animation:ndGlow 3s ease-in-out infinite"/>`;
-        s+=iconInSvg('check',cx,ny,NR*1.1,'white',1,2.2);
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR+5}" fill="${hc}" opacity="0.1"/>`;
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="${hc}" style="filter:drop-shadow(0 0 5px ${hc}99)"/>`;
+        s+=iconInSvg('check',cx,ny,NR*1.0,'white',1,2.2);
       } else if(nd.s==='wip'){
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR+9}" fill="none" stroke="${nc2}" stroke-width="1.2" `+
-           `opacity="0.12" style="animation:ndFloat 2.8s ease-in-out infinite"/>`;
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="none" stroke="${nc2}" stroke-width="3" `+
-           `style="filter:drop-shadow(0 0 5px ${nc2}88);animation:ndFloat 2.8s ease-in-out infinite"/>`;
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR-5}" fill="${nc2}" opacity="0.28" style="pointer-events:none"/>`;
-        s+=iconInSvg('bolt',cx,ny,NR*0.85,nc2,1,2);
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR+8}" fill="none" stroke="${hc}" stroke-width="1" opacity="0.12"/>`;
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="none" stroke="${hc}" stroke-width="2.5" style="filter:drop-shadow(0 0 4px ${hc}77)"/>`;
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR-5}" fill="${hc}" opacity="0.25"/>`;
+        s+=iconInSvg('bolt',cx,ny,NR*0.78,hc,1,2);
       } else {
-        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="var(--nlock)" stroke="var(--nlock-s)" stroke-width="1.8"/>`;
-        s+=iconInSvg('lock',cx,ny,NR*0.85,'rgba(255,255,255,0.3)',1,1.8);
+        s+=`<circle cx="${cx}" cy="${ny}" r="${NR}" fill="var(--nlock)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>`;
+        s+=iconInSvg('lock',cx,ny,NR*0.72,'rgba(255,255,255,0.22)',1,1.8);
       }
       s+=`</g>`;
 
-      // Node label
-      const lc=nd.s==='done'?'rgba(255,255,255,.82)':nd.s==='wip'?nc2:'rgba(255,255,255,.2)';
-      s+=`<text x="${cx}" y="${ny+NR+13}" text-anchor="middle" `+
-         `font-family="Geist Mono,ui-monospace,monospace" font-size="${stripW*0.075}" fill="${lc}" `+
+      // Node label — FIXED font size, not relative to stripW
+      const lc=nd.s==='done'?'rgba(255,255,255,.8)':nd.s==='wip'?hc:'rgba(255,255,255,.2)';
+      s+=`<text x="${cx}" y="${ny+NR+12}" text-anchor="middle" `+
+         `font-family="Geist Mono,ui-monospace,monospace" font-size="${LABEL_FS}" fill="${lc}" `+
          `style="pointer-events:none">${nd.lbl}</text>`;
     });
   });
