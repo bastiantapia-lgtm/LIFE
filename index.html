@@ -3757,26 +3757,42 @@ function initSupabase(){
 }
 
 async function checkAuthAndLoad(){
-  if(!SB_READY){showAuthScreen();return;}
+  if(!SB_READY){initApp();return;}
 
-  // Register listener FIRST — fires immediately with INITIAL_SESSION
-  sb.auth.onAuthStateChange(async(event,session)=>{
-    if((event==='SIGNED_IN'||event==='INITIAL_SESSION')&&session){
-      SB_USER=session.user;
-      updateSyncBadge('syncing');
-      try{await syncFromSupabase(SB_USER.id);}catch(e){console.warn(e);}
-      updateSyncBadge('synced');
-      updateSidebarUser();
-      hideAuthScreen();
-      initApp();
-    } else if(event==='INITIAL_SESSION'&&!session){
-      showAuthScreen();
-    } else if(event==='SIGNED_OUT'){
+  // Handle future sign-out only
+  sb.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'){
       SB_USER=null;
       updateSyncBadge('offline');
       showAuthScreen();
+    } else if(event==='SIGNED_IN'&&session&&!SB_USER){
+      // Catches sign-in after the initial getSession call
+      SB_USER=session.user;
+      updateSidebarUser();
+      updateSyncBadge('syncing');
+      syncFromSupabase(SB_USER.id).then(()=>updateSyncBadge('synced'));
+      hideAuthScreen();
+      initApp();
     }
   });
+
+  // getSession() handles both normal load AND OAuth redirect hash processing
+  try{
+    const{data:{session},error}=await sb.auth.getSession();
+    if(session){
+      SB_USER=session.user;
+      updateSidebarUser();
+      updateSyncBadge('syncing');
+      syncFromSupabase(SB_USER.id).then(()=>updateSyncBadge('synced'));
+      hideAuthScreen();
+      initApp();
+    } else {
+      showAuthScreen();
+    }
+  }catch(e){
+    console.warn('Auth error:',e);
+    showAuthScreen();
+  }
 }
 
 function showAuthScreen(){
