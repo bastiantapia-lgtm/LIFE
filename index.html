@@ -418,7 +418,13 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 .sk-progress-track{height:6px;background:var(--scratch);border-radius:3px;overflow:hidden;margin-bottom:16px;}
 .sk-progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),#7DB8FF);border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1);width:0%;}
 .sk-criteria{margin-bottom:16px;}
-.sk-crit{display:grid;grid-template-columns:18px 1fr 36px;gap:8px;align-items:center;margin-bottom:9px;}
+.sk-crit{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;margin-bottom:9px;}
+.sk-crit-controls{display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.crit-btn{width:26px;height:26px;border-radius:7px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-2);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all .15s;}
+.crit-btn:hover{background:var(--surface-hover);color:var(--text);}
+.crit-btn.plus:hover{background:rgba(52,211,153,.12);color:var(--green);border-color:rgba(52,211,153,.3);}
+.crit-btn.minus:hover{background:rgba(239,68,68,.1);color:var(--danger);border-color:rgba(239,68,68,.2);}
+.sk-crit-pct{font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--text);text-align:center;min-width:30px;}
 .sk-crit-icon{font-size:13px;text-align:center;}
 .sk-crit-bar{height:5px;background:var(--scratch);border-radius:3px;overflow:hidden;position:relative;}
 .sk-crit-bar-fill{height:100%;border-radius:3px;transition:width .5s ease;}
@@ -617,6 +623,168 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 .chat-empty-title{font-size:14px;color:var(--text-2);font-weight:600;margin-bottom:6px;}
 .chat-empty-desc{font-size:12px;color:var(--text-3);line-height:1.45;}
 
+.blk-skill-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:var(--r-pill);border:1px solid;background:transparent;cursor:pointer;margin-top:10px;transition:opacity .15s;}
+.blk-skill-btn:hover{opacity:.75;}
+
+/* ── SKILL CRITERIA SUMMARY (read-only) ── */
+.sk-criteria-summary{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.sk-crit-mini{flex:1;min-width:80px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 10px;}
+.sk-crit-mini-label{font-family:var(--font-mono);font-size:9px;color:var(--text-3);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:5px;}
+.sk-crit-mini-bar{height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-bottom:4px;}
+.sk-crit-mini-pct{font-family:var(--font-mono);font-size:12px;font-weight:700;}
+
+/* ── MISSIONS ── */
+.mission-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 15px;margin-bottom:10px;transition:border-color .2s;}
+.mission-card.done{background:rgba(52,211,153,.04);border-color:rgba(52,211,153,.2);}
+.mission-card.locked{opacity:.6;}
+.mission-card-head{margin-bottom:8px;}
+.mission-type-badge{display:inline-block;font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:var(--r-pill);margin-bottom:6px;}
+.mission-title{font-size:13.5px;font-weight:600;color:var(--text);letter-spacing:-.01em;margin-bottom:6px;line-height:1.3;}
+.mission-meta{display:flex;align-items:center;gap:6px;}
+.mission-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:9px;font-weight:700;padding:3px 8px;border-radius:var(--r-pill);}
+.mission-badge.done-badge{background:rgba(52,211,153,.12);color:var(--green);}
+.mission-badge.lock-badge{background:var(--surface-2);color:var(--text-3);}
+.mission-badge.xp-badge{background:rgba(251,191,36,.1);color:var(--gold);}
+.mission-unlock-req{font-family:var(--font-mono);font-size:10px;color:var(--text-3);display:flex;align-items:center;gap:5px;padding-top:4px;}
+.mission-done-info{font-family:var(--font-mono);font-size:10px;color:var(--green);padding-top:4px;font-weight:500;}
+
+/* Logrables checklist */
+.mission-logrables{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.lograble{display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:7px 10px;border-radius:9px;background:var(--surface-2);transition:background .15s;}
+.lograble:hover{background:var(--surface-hover);}
+.lograble.checked{background:rgba(52,211,153,.06);}
+.log-check{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;color:var(--green);}
+.lograble.checked .log-check{background:var(--green);border-color:var(--green);color:#fff;}
+.log-text{font-size:12.5px;color:var(--text-2);line-height:1.4;flex:1;}
+.lograble.checked .log-text{color:var(--text-3);text-decoration:line-through;}
+
+/* Mission footer */
+.mission-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.mission-count{font-family:var(--font-mono);font-size:10px;color:var(--text-3);font-weight:500;}
+.mission-actions{display:flex;align-items:center;gap:8px;}
+.mission-link{font-family:var(--font-mono);font-size:10px;color:var(--blue);font-weight:600;display:inline-flex;align-items:center;gap:4px;text-decoration:none;padding:5px 8px;border-radius:7px;background:rgba(110,159,255,.08);transition:background .15s;}
+.mission-link:hover{background:rgba(110,159,255,.15);}
+.mission-pomo-btn{font-family:var(--font-mono);font-size:10px;font-weight:700;padding:5px 10px;border-radius:7px;border:1px solid;background:transparent;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+.mission-pomo-btn:hover{opacity:.75;}
+.mission-empty{font-size:12px;color:var(--text-3);text-align:center;padding:16px 0;line-height:1.5;}
+
+/* Blok skill btn */
+.blk-skill-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:var(--r-pill);border:1px solid;background:transparent;cursor:pointer;margin-top:10px;transition:opacity .15s;}
+.blk-skill-btn:hover{opacity:.75;}
+
+/* ── STREAK CHIP ── */
+.streak-chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-pill);padding:7px 14px;cursor:default;transition:all .2s;}
+.streak-chip.active{border-color:var(--gold);background:rgba(251,191,36,.08);}
+.streak-chip.danger{border-color:var(--warning);background:rgba(245,158,11,.08);animation:streakPulse 2s ease-in-out infinite;}
+.streak-chip.zero{opacity:.6;}
+.streak-num{font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text);line-height:1;}
+.streak-chip.active .streak-num{color:var(--gold);}
+.streak-chip.danger .streak-num{color:var(--warning);}
+.streak-label{font-family:var(--font-mono);font-size:10px;color:var(--text-3);font-weight:500;letter-spacing:.04em;}
+.streak-best{font-family:var(--font-mono);font-size:9px;color:var(--text-3);font-weight:500;}
+@keyframes streakPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0)}50%{box-shadow:0 0 0 3px rgba(245,158,11,.25)}}
+
+/* ── NEXT PROJECT CARD ── */
+.npj-wrap{margin-bottom:22px;}
+.next-proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;cursor:pointer;transition:border-color .2s;}
+.next-proj-card:hover{border-color:var(--border-strong);}
+.npj-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.npj-label{font-family:var(--font-mono);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--text-3);text-transform:uppercase;}
+.npj-lvl{font-family:var(--font-mono);font-size:9px;color:var(--text-3);font-weight:500;letter-spacing:.06em;}
+.npj-title{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.01em;margin-bottom:4px;}
+.npj-req{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-bottom:10px;font-weight:500;}
+.npj-bar-track{height:4px;background:var(--surface-2);border-radius:2px;overflow:hidden;margin-bottom:5px;}
+.npj-bar-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.npj-pct{font-family:var(--font-mono);font-size:10px;color:var(--text-3);font-weight:500;text-align:right;}
+
+/* ── PROJECTS SHEET ── */
+.proj-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:70;opacity:0;pointer-events:none;transition:opacity .25s;}
+.proj-overlay.open{opacity:1;pointer-events:all;}
+.proj-sheet{position:absolute;left:0;right:0;bottom:0;height:88%;background:var(--bg);border-radius:24px 24px 0 0;border-top:1px solid var(--border);z-index:71;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.proj-sheet.open{transform:translateY(0);}
+.proj-sheet-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 0;flex-shrink:0;}
+.proj-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.proj-sheet-title{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.proj-sheet-close{width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-2);}
+#proj-body{flex:1;overflow-y:auto;padding:16px 20px calc(20px + env(safe-area-inset-bottom));}
+
+.proj-group{margin-bottom:24px;}
+.proj-group-title{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:12px;}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:14px 16px;margin-bottom:10px;}
+.proj-card.unlocked{border-color:rgba(52,211,153,.25);background:rgba(52,211,153,.04);}
+.proj-card-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px;}
+.proj-card-ic{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:var(--surface-2);flex-shrink:0;}
+.proj-card-info{flex:1;min-width:0;}
+.proj-card-title{font-size:14px;font-weight:600;color:var(--text);letter-spacing:-.01em;margin-bottom:2px;}
+.proj-card-desc{font-size:12px;color:var(--text-3);line-height:1.35;}
+.proj-card-badge{font-family:var(--font-mono);font-size:9px;font-weight:700;padding:4px 8px;border-radius:6px;letter-spacing:.06em;flex-shrink:0;}
+.proj-card-badge.u{background:rgba(52,211,153,.15);color:var(--green);}
+.proj-card-badge.l{background:var(--surface-2);color:var(--text-3);}
+.proj-reqs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.proj-req-item{font-family:var(--font-mono);font-size:9px;font-weight:600;padding:3px 8px;border-radius:var(--r-pill);background:var(--surface-2);color:var(--text-3);}
+.proj-req-item.met{background:rgba(52,211,153,.12);color:var(--green);}
+.proj-bar-track{height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden;}
+.proj-bar-fill{height:100%;border-radius:2px;transition:width .8s ease;}
+.proj-action{font-family:var(--font-mono);font-size:10px;color:var(--text-3);margin-top:8px;font-weight:500;}
+.proj-action.linked{color:var(--blue);display:flex;align-items:center;gap:4px;}
+
+/* ── XP ANIMATION OVERLAY ── */
+.xp-overlay{
+  position:absolute;inset:0;z-index:90;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding:0 24px calc(100px + env(safe-area-inset-bottom));
+  pointer-events:none;
+}
+.xp-overlay.show{pointer-events:all;}
+
+.xp-card{
+  width:100%;max-width:380px;
+  background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-xl);padding:24px 24px 20px;
+  box-shadow:0 -4px 40px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);
+  transform:translateY(120%);opacity:0;
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s ease;
+}
+.xp-overlay.show .xp-card{transform:translateY(0);opacity:1;}
+.xp-overlay.hide .xp-card{transform:translateY(120%);opacity:0;transition:transform .3s ease,opacity .25s ease;}
+
+.xp-label{
+  font-family:var(--font-mono);font-size:10px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);
+  margin-bottom:12px;display:flex;align-items:center;gap:8px;
+}
+.xp-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:dotPulse 1.5s ease-in-out infinite;}
+
+.xp-amount{
+  font-family:var(--font-mono);font-size:52px;font-weight:700;
+  color:var(--gold);letter-spacing:-.03em;line-height:1;
+  margin-bottom:20px;
+  animation:none;
+}
+.xp-overlay.show .xp-amount{animation:xpPop .5s cubic-bezier(.34,1.56,.64,1) .1s both;}
+@keyframes xpPop{
+  from{transform:scale(.6);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+
+.xp-level-row{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.xp-level-num{font-family:var(--font-mono);font-size:11px;color:var(--text-3);font-weight:600;letter-spacing:.06em;}
+.xp-level-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+
+.xp-bar-track{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.xp-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--violet));width:0%;transition:width 1.2s cubic-bezier(.4,0,.2,1) .3s;}
+
+.xp-bar-meta{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:10px;color:var(--text-3);font-weight:500;}
+
+/* Level up variant */
+.xp-card.levelup{border-color:var(--gold);box-shadow:0 -4px 40px rgba(0,0,0,.5),0 0 24px rgba(251,191,36,.15);}
+.xp-card.levelup .xp-label::before{background:var(--gold);box-shadow:0 0 8px var(--gold);}
+.xp-card.levelup .xp-bar-fill{background:linear-gradient(90deg,var(--gold),#F59E0B);}
+
+@keyframes levelUpFlash{
+  0%,100%{opacity:1;}50%{opacity:.5;}
+}
+
 /* Pomodoro full overlay */
 .pomo-overlay{position:absolute;inset:0;background:rgba(2,2,10,.95);backdrop-filter:blur(20px);z-index:500;display:none;align-items:center;justify-content:center;}
 .pomo-overlay.open{display:flex;}
@@ -694,9 +862,16 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
         <div class="gline"><span class="ldot"></span><span id="dlabel">Miércoles, 30 de abril</span></div>
         <div class="grow">
           <div class="gmain"><span id="gtext">Buen día</span>,<br><span class="nm">Bastian.</span></div>
-          <div style="display:flex;gap:6px;flex-shrink:0;margin-top:2px;">
-            <button class="tbtn alt" onclick="toggleFont()" title="Cambiar fuente"><span id="ficon"></span></button>
-            <button class="tbtn" onclick="toggleTheme()"><svg id="ticon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0;">
+            <div style="display:flex;gap:6px;">
+              <button class="tbtn alt" onclick="toggleFont()" title="Cambiar fuente"><span id="ficon"></span></button>
+              <button class="tbtn" onclick="toggleTheme()"><svg id="ticon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
+            </div>
+            <div class="streak-chip" id="streak-chip">
+              <span id="streak-ic"></span>
+              <span class="streak-num" id="streak-num">0</span>
+              <span class="streak-label">días</span>
+            </div>
           </div>
         </div>
       </div>
@@ -713,10 +888,20 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
       <div class="stitle">Progreso del día</div>
       <div class="dprog"><div class="dsegs"><div class="seg done"></div><div class="seg done"></div><div class="seg active"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div></div><div class="dpct">25%</div></div>
       <div class="stitle">Bloques de hoy</div>
-      <div class="blk"><div class="acc" style="background:#A78BFA"></div><div class="bhdr"><div><div class="bcat" style="color:#A78BFA">01 · Académico</div><div class="bnm">Clases ICI</div></div><div class="badge bd">LISTO</div></div><div class="tasks"><div class="task done"><div class="chk done"><span class="chk-ic">✓</span></div>Optimización — Sala B4<div class="ttime">08:30</div></div><div class="task done"><div class="chk done"><span class="chk-ic">✓</span></div>Estadística aplicada<div class="ttime">10:00</div></div></div></div>
-      <div class="blk"><div class="acc" style="background:#6E9FFF"></div><div class="bhdr"><div><div class="bcat" style="color:#6E9FFF">02 · Misión · Programación</div><div class="bnm">Python — POO</div></div><div class="badge ba">EN CURSO</div></div><div class="tasks"><div class="task done"><div class="chk done"><span class="chk-ic">✓</span></div>Clases y herencia<div class="ttime">45min</div></div><div class="task active"><div class="chk active"></div>Ejercicio en Colab<div class="ttime">60min</div></div><div class="task"><div class="chk"></div>Mini-proyecto: clase Jugador<div class="ttime">45min</div></div></div></div>
-      <div class="blk"><div class="acc" style="background:#FBBF24"></div><div class="bhdr"><div><div class="bcat" style="color:#FBBF24">03 · Proyecto</div><div class="bnm">Hackathon Fintech</div></div><div class="badge bp">PENDIENTE</div></div><div class="tasks"><div class="task"><div class="chk"></div>Definir problema<div class="ttime">30min</div></div><div class="task"><div class="chk"></div>Explorar Claude API docs<div class="ttime">60min</div></div></div></div>
-      <div class="xps"><div><div class="xpl">XP DEL DÍA</div><div class="xpv">+140 xp</div></div><div class="xpb"><div class="xpf"></div></div><div class="xpn">nivel 1 → 2</div></div>
+      <div id="day-blocks-container"></div>
+      <!-- Next project card -->
+      <div class="npj-wrap">
+        <div class="next-proj-card" id="next-proj-card" onclick="openProjects()">
+          <div class="npj-top"><div class="npj-label">PRÓXIMO PROYECTO</div></div>
+          <div class="npj-title">Cargando...</div>
+        </div>
+      </div>
+
+      <div class="xps">
+        <div><div class="xpl">XP DEL DÍA</div><div class="xpv" id="xp-today-val">+0 xp</div></div>
+        <div style="flex:1;margin:0 14px;"><div id="xp-level-bar" style="height:4px;background:var(--surface-2);border-radius:3px;overflow:hidden"></div></div>
+        <div class="xpn" id="xp-level-label">NIVEL 1 — Explorador</div>
+      </div>
     </div>
     <div class="bnav" id="home-nav">
       <div class="ni active" id="ni-home"><span class="ni-ic" id="ni-ic-home"></span><div class="nl">HOY</div></div>
@@ -865,6 +1050,34 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
     </div>
   </div>
 
+  <!-- PROJECTS SHEET -->
+  <div class="proj-overlay" id="proj-overlay" onclick="closeProjects()"></div>
+  <div class="proj-sheet" id="proj-sheet">
+    <div class="proj-sheet-handle"></div>
+    <div class="proj-sheet-head">
+      <div class="proj-sheet-title">Proyectos</div>
+      <div class="proj-sheet-close" onclick="closeProjects()"><span id="proj-close-ic"></span></div>
+    </div>
+    <div id="proj-body"></div>
+  </div>
+
+  <!-- XP ANIMATION OVERLAY -->
+  <div class="xp-overlay" id="xp-overlay">
+    <div class="xp-card" id="xp-card">
+      <div class="xp-label" id="xp-label">SESIÓN COMPLETADA</div>
+      <div class="xp-amount" id="xp-amount">+25 XP</div>
+      <div class="xp-level-row">
+        <span class="xp-level-num" id="xp-level-num">NIVEL 3</span>
+        <span class="xp-level-title" id="xp-level-title">Practicante</span>
+      </div>
+      <div class="xp-bar-track"><div class="xp-bar-fill" id="xp-bar-fill"></div></div>
+      <div class="xp-bar-meta">
+        <span id="xp-bar-cur">420 XP</span>
+        <span id="xp-bar-next">→ 600 XP siguiente nivel</span>
+      </div>
+    </div>
+  </div>
+
   <!-- DETAIL SHEET -->
   <div class="sheet-overlay" id="sheet-overlay" onclick="closeSheet()"></div>
   <div class="sheet" id="detail-sheet">
@@ -886,16 +1099,14 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
         <div class="sk-progress-track"><div class="sk-progress-fill" id="sheet-progress-fill"></div></div>
       </div>
 
-      <!-- Criteria breakdown -->
+      <!-- Criteria summary (read-only now, driven by missions) -->
       <div id="sheet-criteria"></div>
 
-      <!-- Pomodoro CTA -->
-      <div class="sk-pomo-row" id="sheet-pomo-cta">
-        <button class="sk-pomo-btn study" onclick="startPomodoro('material')"><span class="sk-pomo-ic" id="sk-pomo-ic-study"></span>Estudiar</button>
-        <button class="sk-pomo-btn practice" onclick="startPomodoro('practice')"><span class="sk-pomo-ic" id="sk-pomo-ic-prac"></span>Practicar</button>
-      </div>
+      <!-- Missions section (replaces manual +/- controls) -->
+      <div class="sheet-section-title" style="margin-top:4px;">MISIONES</div>
+      <div id="sheet-missions"></div>
 
-      <div class="sheet-section-title">RECURSOS CURADOS</div>
+      <div class="sheet-section-title" style="margin-top:16px;">RECURSOS CURADOS</div>
       <div id="sheet-resources"></div>
       <div class="sheet-section-title" style="margin-top:14px;">TAREAS DE DOMINIO</div>
       <div id="sheet-tasks"></div>
@@ -1030,6 +1241,11 @@ function initIcons(){
   set('dni-ic-chat','chat',18);
   set('dni-ic-set','settings',18);
   set('dnav-account-ic','user',16);
+  // Projects sheet
+  set('proj-close-ic','close',14);
+  // Streak icon initial
+  const sic=document.getElementById('streak-ic');
+  if(sic) sic.innerHTML=icon('target',14);
 }
 window.addEventListener('DOMContentLoaded',initIcons);
 
@@ -1299,16 +1515,17 @@ const SKILLS_DATA={
     criteria:{material:60,practice:40,project:0,explanation:0},
     desc:'POO — clases, herencia, encapsulación, polimorfismo. Esencial para escribir código escalable.',
     resources:[
-      {type:'course',  icon:'🎓',name:'Real Python — OOP',         url:'https://realpython.com/python3-object-oriented-programming/', meta:'Tutorial profundo'},
-      {type:'course',  icon:'🎓',name:'CS50P — Object-Oriented',   url:'https://cs50.harvard.edu/python/2022/weeks/8/',               meta:'Semana 8 de CS50P'},
-      {type:'practice',icon:'🏋',name:'Exercism POO exercises',    url:'https://exercism.org/tracks/python/exercises',                meta:'Ejercicios Exercism'},
-      {type:'docs',    icon:'📄',name:'Python Classes',            url:'https://docs.python.org/3/tutorial/classes.html',             meta:'Docs oficiales'},
+      {type:'course',  icon:'🎓',name:'Real Python — Learning Path OOP',url:'https://realpython.com/learning-paths/object-oriented-programming-oop-python/', meta:'Path completo • clases → métodos dunder'},
+      {type:'course',  icon:'🎓',name:'freeCodeCamp — Classes & Objects',url:'https://www.freecodecamp.org/learn/learn-python-classes-and-objects/', meta:'Curso interactivo enfocado'},
+      {type:'practice',icon:'🏋',name:'Exercism — Classes Concept',     url:'https://exercism.org/tracks/python/concepts/classes',     meta:'49 ejercicios específicos de clases'},
+      {type:'practice',icon:'🏋',name:'HackerRank — Classes & Objects', url:'https://www.hackerrank.com/challenges/classes-objects/problem',meta:'Reto de arquitectura con clases'},
+      {type:'docs',    icon:'📄',name:'Python Classes — docs oficiales',url:'https://docs.python.org/3/tutorial/classes.html',         meta:'Scope, namespaces, herencia'},
     ],
     tasks:[
-      'Crear clase Jugador (atributos + métodos + nivel)',
+      'Pipeline framework: clases Transformer (Nulos, Outliers) heredando de base',
+      'Backtesting engine: clases Activo, Portafolio, Estrategia (composición)',
       'Implementar herencia: Estudiante(Persona), Analista(Empleado)',
-      'Mini-proyecto: sistema de biblioteca con POO',
-      'Aplicar Builder o Observer pattern',
+      'Aplicar @property y método __init__ con validación de tipos',
     ]},
   py4:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
@@ -1325,15 +1542,18 @@ const SKILLS_DATA={
     ]},
   py5:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
-    desc:'Decoradores y closures — la magia detrás de frameworks como Flask y FastAPI.',
+    desc:'Decoradores, closures y metaprogramación — la magia detrás de Flask, FastAPI, Pandas.',
     resources:[
-      {type:'course',  icon:'🎓',name:'Real Python — Decorators',  url:'https://realpython.com/primer-on-python-decorators/', meta:'Tutorial canónico'},
-      {type:'docs',    icon:'📄',name:'functools docs',            url:'https://docs.python.org/3/library/functools.html',   meta:'Docs Python'},
+      {type:'course',  icon:'🎓',name:'Real Python — Decorators',     url:'https://realpython.com/primer-on-python-decorators/',   meta:'Tutorial canónico'},
+      {type:'course',  icon:'🎓',name:'Fluent Python (book site)',    url:'https://www.fluentpython.com/',                          meta:'Ramalho · referencia avanzada'},
+      {type:'docs',    icon:'📄',name:'High Performance Python',      url:'https://pythonspeed.com/articles/',                       meta:'Optimización memoria + CPU'},
+      {type:'docs',    icon:'📄',name:'functools docs',               url:'https://docs.python.org/3/library/functools.html',       meta:'Docs Python'},
     ],
     tasks:[
       'Implementar decorador @timer que mide tiempo de ejecución',
-      'Crear decorador @retry(n) que reintenta una función',
-      'Usar functools.lru_cache para optimizar recursión',
+      'Crear decorador @retry(n) que reintenta con backoff exponencial',
+      'Usar functools.lru_cache para optimizar Fibonacci recursivo',
+      'Mini-proyecto: ORM minimalista con Metaclasses (data class auto-validada)',
     ]},
   py6:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
@@ -1364,13 +1584,15 @@ const SKILLS_DATA={
     criteria:{material:50,practice:30,project:0,explanation:0},
     desc:'Modelo relacional — tablas, claves primarias y foráneas. Antes de queries, entender los datos.',
     resources:[
-      {type:'colab',   icon:'💻',name:'SQLBolt Tutorial',           url:'https://sqlbolt.com/',                                                 meta:'Tutorial interactivo gratis'},
-      {type:'course',  icon:'🎓',name:'Khan Academy SQL',          url:'https://www.khanacademy.org/computing/computer-programming/sql',     meta:'Curso de intro'},
+      {type:'course',  icon:'🎓',name:'Stanford — Intro to Databases',url:'https://online.stanford.edu/courses/soe-ydatabases-databases', meta:'Base teórica del modelo relacional'},
+      {type:'colab',   icon:'💻',name:'SQLBolt Tutorial',             url:'https://sqlbolt.com/',                                          meta:'Tutorial interactivo gratis'},
+      {type:'docs',    icon:'📄',name:'PostgreSQL Tutorial',          url:'https://www.postgresqltutorial.com/',                           meta:'PostgreSQL es estándar en data eng'},
+      {type:'course',  icon:'🎓',name:'Khan Academy SQL',             url:'https://www.khanacademy.org/computing/computer-programming/sql',meta:'Intro paso a paso'},
     ],
     tasks:[
-      'Diseñar esquema de tienda (3 tablas con relaciones)',
+      'Diseñar esquema e-commerce (usuarios, pedidos, productos) en 3FN',
       'Identificar PK y FK en un dataset real',
-      'Completar SQLBolt SELECT basics',
+      'Completar SQLBolt lecciones 1-3 (SELECT basics)',
     ]},
   sq2:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
@@ -1389,14 +1611,14 @@ const SKILLS_DATA={
     criteria:{material:0,practice:0,project:0,explanation:0},
     desc:'JOINs — donde SQL se vuelve poderoso. Combinar tablas es fundamental para análisis real.',
     resources:[
-      {type:'practice',icon:'🏋',name:'SQLBolt JOINs',              url:'https://sqlbolt.com/lesson/select_queries_with_joins', meta:'Ejercicios JOINs'},
-      {type:'colab',   icon:'💻',name:'Visual JOIN Types',         url:'https://joins.spathon.com/',                  meta:'Visualización interactiva'},
-      {type:'practice',icon:'🏋',name:'LeetCode SQL JOIN problems',url:'https://leetcode.com/tag/database/',          meta:'Problems con JOINs'},
+      {type:'practice',icon:'🏋',name:'SQLBolt JOINs',               url:'https://sqlbolt.com/lesson/select_queries_with_joins',           meta:'Ejercicios paso a paso'},
+      {type:'course',  icon:'🎓',name:'Mode SQL — JOINs',           url:'https://mode.com/sql-tutorial/sql-joins',                          meta:'Datos reales, problemas de negocio'},
+      {type:'practice',icon:'🏋',name:'HackerRank SQL — Joins',     url:'https://www.hackerrank.com/domains/sql?filters%5Bsubdomains%5D%5B%5D=join',meta:'Filtrado al subdominio JOIN'},
     ],
     tasks:[
       'Resolver todos los JOINs de SQLBolt',
       'Recrear pandas merge() en SQL equivalente',
-      'Query con 3+ tablas para responder pregunta de negocio',
+      'Query con 3+ tablas para responder pregunta de negocio (Mode dataset)',
     ]},
   sq4:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
@@ -1525,13 +1747,17 @@ const SKILLS_DATA={
     criteria:{material:0,practice:0,project:0,explanation:0},
     desc:'Git — control de versiones estándar. Historial, commits descriptivos, undo de cualquier cosa.',
     resources:[
-      {type:'course',  icon:'🎓',name:'Pro Git Book (gratis)',     url:'https://git-scm.com/book/es/v2',                          meta:'Libro oficial gratis'},
-      {type:'colab',   icon:'💻',name:'Learn Git Branching',       url:'https://learngitbranching.js.org/?locale=es_ES',         meta:'Tutorial interactivo'},
+      {type:'course',  icon:'🎓',name:'Pro Git Book (gratis, ES)',    url:'https://git-scm.com/book/es/v2',                                meta:'Capítulos 2-3 fundamentales'},
+      {type:'course',  icon:'🎓',name:'Atlassian — Git Tutorials',    url:'https://www.atlassian.com/git/tutorials',                       meta:'Guía técnica con flujos reales'},
+      {type:'colab',   icon:'💻',name:'Learn Git Branching (ES)',     url:'https://learngitbranching.js.org/?locale=es_ES',                meta:'30+ niveles visuales interactivos'},
+      {type:'practice',icon:'🏋',name:'Oh My Git! (juego)',           url:'https://ohmygit.org/',                                          meta:'Juego open source visualizando Git'},
+      {type:'docs',    icon:'📄',name:'Git Reference',                url:'https://git-scm.com/docs',                                      meta:'Manual oficial de comandos'},
     ],
     tasks:[
-      'Inicializar repo y hacer 10 commits descriptivos',
-      'Mensajes con Conventional Commits',
-      'Usar git log y git diff para explorar historial',
+      'Inicializar repo y hacer 10 commits descriptivos (Conventional Commits)',
+      'Completar Learn Git Branching parte 1 (intro a ramas)',
+      'Usar git log, git diff, git reset --soft para deshacer cambios',
+      'Resolver un conflicto de merge real con dos ramas que tocan el mismo archivo',
     ]},
   gt2:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
@@ -1636,25 +1862,29 @@ const SKILLS_DATA={
     criteria:{material:60,practice:40,project:0,explanation:0},
     desc:'Numpy arrays — operaciones n-dim, broadcasting, álgebra lineal eficiente.',
     resources:[
-      {type:'practice',icon:'🏋',name:'100 Numpy Exercises',        url:'https://github.com/rougier/numpy-100',                    meta:'Repo con 100 retos'},
-      {type:'docs',    icon:'📄',name:'NumPy Quickstart',           url:'https://numpy.org/doc/stable/user/quickstart.html',       meta:'Docs oficiales'},
+      {type:'course',  icon:'🎓',name:'Python DS Handbook (VanderPlas)',url:'https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html',meta:'Cap. 2 completo de NumPy'},
+      {type:'practice',icon:'🏋',name:'100 Numpy Exercises',           url:'https://github.com/rougier/numpy-100',                    meta:'100 problemas prog. dificultad'},
+      {type:'docs',    icon:'📄',name:'NumPy Quickstart',              url:'https://numpy.org/doc/stable/user/quickstart.html',       meta:'Docs oficiales'},
     ],
     tasks:[
-      'Resolver 30 numpy-100',
-      'Implementar operaciones de imagen con arrays',
-      'Mini-proyecto: cálculos vectorizados vs loops',
+      'Resolver 30 numpy-100 (vectorización en lugar de loops)',
+      'Broadcasting: rolling window manualmente con numpy',
+      'Mini-proyecto: cálculos vectorizados vs loops (medir tiempo)',
     ]},
   pd2:{depth:'solid',
     criteria:{material:60,practice:40,project:0,explanation:0},
-    desc:'Pandas Series y DataFrames — manipulación de datos tabulares.',
+    desc:'Pandas Series y DataFrames — manipulación de datos tabulares + EDA real.',
     resources:[
-      {type:'colab',   icon:'💻',name:'Kaggle Learn Pandas',        url:'https://www.kaggle.com/learn/pandas',                     meta:'Curso completo Kaggle'},
-      {type:'practice',icon:'🏋',name:'100 Pandas Puzzles',         url:'https://github.com/ajcr/100-pandas-puzzles',             meta:'Notebook práctica'},
+      {type:'colab',   icon:'💻',name:'Kaggle Learn Pandas',         url:'https://www.kaggle.com/learn/pandas',                                   meta:'Curso oficial con notebooks'},
+      {type:'colab',   icon:'💻',name:'Kaggle — Data Cleaning',      url:'https://www.kaggle.com/learn/data-cleaning',                            meta:'EDA real: nulos, escalado, duplicados'},
+      {type:'practice',icon:'🏋',name:'Pandas Exercises (Samora)',   url:'https://github.com/guipsamora/pandas_exercises',                        meta:'11 sub-módulos por tema'},
+      {type:'docs',    icon:'📄',name:'Pandas User Guide',           url:'https://pandas.pydata.org/docs/user_guide/index.html',                  meta:'Cookbook + comparativa con SQL/R'},
     ],
     tasks:[
-      'Kaggle Pandas course completo',
-      'Resolver 30 de 100 pandas puzzles',
-      'EDA básico de un dataset propio',
+      'Kaggle Pandas course completo (6 lecciones)',
+      'Resolver módulos Filtering+Grouping de pandas_exercises',
+      'EDA completo de un dataset real (Kaggle): nulos, distribuciones, correlaciones',
+      'Análisis de mercado inmobiliario: outliers + matriz correlación',
     ]},
   // ML
   ml1:{depth:'basic',
@@ -1672,28 +1902,34 @@ const SKILLS_DATA={
   // ── FINANZAS ──
   fb1:{depth:'solid',
     criteria:{material:60,practice:30,project:0,explanation:0},
-    desc:'VPN y TIR — los criterios de evaluación de proyectos. Calcular es fácil, interpretar es el objetivo.',
+    desc:'VPN y TIR — criterios de evaluación de proyectos. Calcular es fácil, interpretar es el objetivo.',
     resources:[
-      {type:'course',  icon:'🎓',name:'Coursera Financial Markets (Yale, audit gratis)', url:'https://www.coursera.org/learn/financial-markets-global', meta:'Robert Shiller'},
-      {type:'docs',    icon:'📄',name:'Corporate Finance Institute', url:'https://corporatefinanceinstitute.com/resources/valuation/npv-vs-irr/', meta:'Artículos de referencia'},
+      {type:'course',  icon:'🎓',name:'MIT OCW — Capital Budgeting',   url:'https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/pages/video-lectures-and-slides/capital-budgeting/',meta:'Lecture en video + slides'},
+      {type:'course',  icon:'🎓',name:'Khan Academy — IRR & NPV',      url:'https://www.khanacademy.org/economics-finance-domain/core-finance/capital-budgeting',                                                meta:'Matemática del descuento'},
+      {type:'docs',    icon:'📄',name:'CFI — NPV vs IRR',              url:'https://corporatefinanceinstitute.com/resources/valuation/npv-vs-irr/',                                                              meta:'Cuándo usar cuál + caso Multiple IRR'},
+      {type:'practice',icon:'🏋',name:'FinanceTrain — NPV/IRR practice',url:'https://financetrain.com/practice-problems-on-npv-and-irr/',                                                                       meta:'10 problemas aplicados con solución'},
     ],
     tasks:[
-      'Modelo de flujos de caja en Excel',
-      'VPN con distintas tasas, graficar sensibilidad',
-      'Función VPN/TIR en Python con numpy',
+      'Modelo de flujos de caja en Excel con VPN/TIR aplicado',
+      'Análisis de sensibilidad: graficar VPN vs distintas tasas de descuento',
+      'Función VPN/TIR en Python (numpy.npv/irr) con dataset propio',
+      'Decidir entre 2 proyectos mutuamente excluyentes usando ambos criterios',
     ]},
   // ── GESTIÓN ──
   gf1:{depth:'basic',
     criteria:{material:0,practice:0,project:0,explanation:0},
-    desc:'Proyecto vs tarea operativa. Inicio, fin, recursos limitados, objetivo único.',
+    desc:'Proyecto vs tarea operativa + bases de Agile/Scrum. Inicio, fin, recursos limitados, objetivo único.',
     resources:[
-      {type:'course',  icon:'🎓',name:'Google PM Certificate (Coursera audit)', url:'https://www.coursera.org/professional-certificates/google-project-management', meta:'Curso completo gratis al auditar'},
-      {type:'docs',    icon:'📄',name:'PMI What is PM',             url:'https://www.pmi.org/about/learn-about-pmi/what-is-project-management', meta:'Definición oficial'},
+      {type:'course',  icon:'🎓',name:'Google PM Certificate (audit)', url:'https://www.coursera.org/professional-certificates/google-project-management',meta:'Curso completo gratis al auditar'},
+      {type:'course',  icon:'🎓',name:'Atlassian — Agile Coach',       url:'https://www.atlassian.com/agile',                                              meta:'Guía técnica de Scrum + Kanban'},
+      {type:'docs',    icon:'📄',name:'Scrum Guide oficial (ES)',      url:'https://scrumguides.org/scrum-guide.html',                                     meta:'Documento fundacional de Scrum'},
+      {type:'practice',icon:'🏋',name:'Scrum.org Open Assessment',     url:'https://www.scrum.org/open-assessments/scrum-open',                            meta:'30 preguntas oficiales'},
     ],
     tasks:[
-      'Documentar 3 proyectos y 3 tareas, clasificarlas',
-      'Identificar inicio/fin/entregable de un proyecto tuyo',
-      'Project charter de un proyecto personal',
+      'Documentar 3 proyectos y 3 tareas, clasificarlas según definición',
+      'Crear tablero Kanban (Trello/GitHub Projects) para tu portafolio',
+      'Definir 5 user stories con criterios de aceptación',
+      'Aprobar Scrum Open Assessment (≥85%)',
     ]},
 };
 
@@ -1876,9 +2112,21 @@ function drawOverview(){
   const svgEl=document.getElementById('tsvg');
   if(svgEl) svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
 
-  // X geometry — diagonals reach toward corners
   OCX=W/2; OCY=H/2;
-  R_BR=Math.min(W,H)*0.36;
+  R_BR=Math.min(W,H)*0.36; // keep for triggerZoom compatibility
+
+  // ── Elliptical radii: portrait screens get a flatter X ──
+  const isPortrait=H>W*1.1;
+  const RH=isPortrait?Math.min(W,H)*0.22:R_BR; // horizontal — más angosto
+  const RV=isPortrait?Math.min(W,H)*0.44:R_BR; // vertical — más alto
+  // Store for triggerZoom
+  window._OVR_RH=RH; window._OVR_RV=RV;
+
+  // Helper: elliptical point
+  function ptE(cx,cy,rh,rv,deg){
+    const a=toR(deg);
+    return{x:cx+rh*Math.cos(a),y:cy+rv*Math.sin(a)};
+  }
 
   const branchSpread=42;
   const branchLen=Math.min(W,H)*0.11;
@@ -1889,59 +2137,56 @@ function drawOverview(){
 
   let s='';
 
-  // ── BACKGROUND CORNER ICONS (translucent, big) ──
-  // Each corner has the icon of the area that lives there
-  const cornerOff=Math.min(W,H)*0.18;
-  const cornerSz=Math.min(W,H)*0.42;
+  // ── BACKGROUND CORNER ICONS (translucent) ──
+  const cornerOff=Math.min(W,H)*0.16;
+  const cornerSz=Math.min(W,H)*0.40;
   Object.entries(AREAS).forEach(([key,A])=>{
     const dirX=Math.cos(toR(A.angle));
     const dirY=Math.sin(toR(A.angle));
-    // Position: pushed toward corner, outside the area-node radius
-    const cx=OCX+dirX*(R_BR+cornerOff);
-    const cy=OCY+dirY*(R_BR+cornerOff);
+    const cx=OCX+dirX*(RH+cornerOff);
+    const cy=OCY+dirY*(RV+cornerOff*0.5);
     s+=iconInSvg(A.iconName,cx,cy,cornerSz,A.color,0.07,0.5);
   });
 
-  // ── Subtle X axis lines through center (visual scaffolding) ──
-  const ext=Math.min(W,H)*0.5;
-  s+=`<line x1="${OCX-ext*0.7}" y1="${OCY-ext*0.7}" x2="${OCX+ext*0.7}" y2="${OCY+ext*0.7}" stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
-  s+=`<line x1="${OCX-ext*0.7}" y1="${OCY+ext*0.7}" x2="${OCX+ext*0.7}" y2="${OCY-ext*0.7}" stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
+  // ── Scaffold X lines (elliptical) ──
+  const extH=RH*1.35, extV=RV*1.35;
+  s+=`<line x1="${OCX-extH}" y1="${OCY-extV}" x2="${OCX+extH}" y2="${OCY+extV}" stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
+  s+=`<line x1="${OCX-extH}" y1="${OCY+extV}" x2="${OCX+extH}" y2="${OCY-extV}" stroke="rgba(255,255,255,.04)" stroke-width="1"/>`;
 
   // ── Center "L" node ──
   s+=`<circle cx="${OCX}" cy="${OCY}" r="${centerR}" fill="rgba(255,255,255,.025)"/>`;
   s+=`<circle cx="${OCX}" cy="${OCY}" r="${centerCore}" fill="var(--surface)" stroke="rgba(255,255,255,.12)" stroke-width="1.5"/>`;
   s+=`<text x="${OCX}" y="${OCY+centerCore*0.32}" text-anchor="middle" font-family="inherit" font-size="${centerCore*0.85}" font-weight="700" fill="rgba(255,255,255,.55)" style="letter-spacing:-.02em">L</text>`;
 
-  // ── Area nodes positioned on diagonals ──
+  // ── Area nodes on ellipse ──
   Object.entries(AREAS).forEach(([key,A])=>{
-    const p=ptA(OCX,OCY,R_BR,A.angle);
+    const p=ptE(OCX,OCY,RH,RV,A.angle);
     const branches=BRANCHES[key];
     const startA=A.angle-(branchSpread*(branches.length-1)/2);
 
-    // Twigs hint
+    // Twigs
     branches.forEach((_,bi)=>{
-      const ba=startA+bi*branchSpread, bp=ptA(p.x,p.y,branchLen,ba);
+      const ba=startA+bi*branchSpread;
+      const bp=ptA(p.x,p.y,branchLen,ba);
       s+=`<line x1="${p.x}" y1="${p.y}" x2="${bp.x}" y2="${bp.y}" stroke="${A.color}" stroke-width="1.2" opacity="0.22" stroke-linecap="round"/>`;
       s+=`<circle cx="${bp.x}" cy="${bp.y}" r="${areaR*0.13}" fill="${A.color}" opacity="0.22"/>`;
     });
 
-    // Connection from center → area (curved along diagonal)
+    // Connection center → area (curved)
     const mx=(OCX+p.x)/2, my=(OCY+p.y)/2;
     s+=`<path d="M${OCX},${OCY} Q${mx},${my} ${p.x},${p.y}" fill="none" stroke="${A.color}" stroke-width="2.5" opacity="0.45" stroke-linecap="round"/>`;
 
-    // Area node
+    // Area node circles
     s+=`<circle cx="${p.x}" cy="${p.y}" r="${areaR}" fill="${A.color}" opacity="0.08"/>`;
     s+=`<circle cx="${p.x}" cy="${p.y}" r="${areaCore}" fill="${A.color}" opacity="0.22" stroke="${A.color}" stroke-width="2" style="cursor:pointer" onclick="triggerZoom('${key}')"/>`;
-
-    // Icon inside area node (replaces emoji)
     s+=iconInSvg(A.iconName,p.x,p.y,areaCore*1.05,'white',0.95,1.5);
 
-    // Labels around node — positioned based on diagonal direction
+    // Labels
     const isRight=Math.cos(toR(A.angle))>0;
     const isDown=Math.sin(toR(A.angle))>0;
-    const off=areaR*1.25;
-    const lx=p.x+(isRight?off:-off);
-    const ly=p.y+(isDown?off*0.7:-off*0.4);
+    const offX=areaR*1.25, offY=areaR*0.9;
+    const lx=p.x+(isRight?offX:-offX);
+    const ly=p.y+(isDown?offY:-offY*0.5);
     const anc=isRight?'start':'end';
     const lblFs=Math.min(W,H)*0.024;
     s+=`<text x="${lx}" y="${ly}" text-anchor="${anc}" font-family="inherit" font-size="${lblFs}" font-weight="700" fill="${A.color}" letter-spacing="-.01em" style="pointer-events:none">${A.name}</text>`;
@@ -2150,8 +2395,11 @@ let curMode='overview';
 
 function triggerZoom(key){
   const A=AREAS[key];
-  // Get clicked node SVG position
-  const p=ptA(OCX,OCY,R_BR,A.angle);
+  // Use elliptical radii stored by drawOverview (fallback to R_BR for square screens)
+  const rh=window._OVR_RH||R_BR;
+  const rv=window._OVR_RV||R_BR;
+  const a=toR(A.angle);
+  const p={x:OCX+rh*Math.cos(a), y:OCY+rv*Math.sin(a)};
 
   // Convert SVG → view-tree CSS coordinates
   const svgEl=document.getElementById('tsvg');
@@ -2162,14 +2410,13 @@ function triggerZoom(key){
   const rx=(svgRect.left-vtRect.left)+p.x*scX;
   const ry=(svgRect.top-vtRect.top)+p.y*scY;
 
-  // Set origin, load content, trigger animation
   vtEl.style.setProperty('--rx',rx+'px');
   vtEl.style.setProperty('--ry',ry+'px');
   resetZoom();
   document.getElementById('tree-g').innerHTML=drawArea(key);
   updateHeader(key);
   vtEl.classList.remove('reveal');
-  void vtEl.offsetWidth; // force reflow to restart animation
+  void vtEl.offsetWidth;
   vtEl.classList.add('reveal');
   curMode=key;
 }
@@ -2234,51 +2481,123 @@ function renderNodeSheet(id,status,full,color){
     document.getElementById('sheet-progress-fill').style.background=`linear-gradient(90deg,${color},${color}cc)`;
   },50);
 
-  // Criteria breakdown
+  // Criteria — read-only summary (driven by missions now)
   const c=data.criteria||{material:0,practice:0,project:0,explanation:0};
   const crits=[
-    {k:'material',  ic:'book',    name:'Material estudiado',w:25,opt:false,col:c.material},
-    {k:'practice',  ic:'terminal',name:'Práctica ejecutada', w:35,opt:false,col:c.practice},
-    {k:'project',   ic:'target',  name:'Proyecto aplicado',  w:25,opt:false,col:c.project},
-    {k:'explanation',ic:'mic',    name:'Capacidad de explicar',w:15,opt:true, col:c.explanation},
+    {k:'material',name:'Material',col:c.material},
+    {k:'practice',name:'Práctica', col:c.practice},
+    {k:'project', name:'Proyecto', col:c.project},
   ];
-  let critHtml='<div class="sk-criteria">';
+  let critHtml='<div class="sk-criteria-summary">';
   crits.forEach(cr=>{
-    const fillColor=cr.col>=85?'#10B981':cr.col>=50?color:color+'80';
-    critHtml+=`<div class="sk-crit">
-      <div class="sk-crit-icon" style="color:${color};">${icon(cr.ic,14)}</div>
-      <div class="sk-crit-col">
-        <div class="sk-crit-name"><span>${cr.name} <span class="opt">${cr.opt?'· OPCIONAL':''}</span></span></div>
-        <div class="sk-crit-bar"><div class="sk-crit-bar-fill" style="width:${cr.col}%;background:${fillColor};"></div></div>
-      </div>
-      <div class="sk-crit-pct">${cr.col}%</div>
+    const fc=cr.col>=85?'var(--green)':cr.col>=50?color:color+'55';
+    critHtml+=`<div class="sk-crit-mini">
+      <div class="sk-crit-mini-label">${cr.name}</div>
+      <div class="sk-crit-mini-bar"><div style="width:${cr.col}%;background:${fc};height:100%;border-radius:2px;transition:width .5s"></div></div>
+      <div class="sk-crit-mini-pct" id="cpct-${id}-${cr.k}" style="color:${fc}">${cr.col}%</div>
     </div>`;
   });
   critHtml+='</div>';
   document.getElementById('sheet-criteria').innerHTML=critHtml;
 
-  // Resources — typed icons
-  document.getElementById('sheet-resources').innerHTML=(data.resources||[]).map(r=>{
-    const typeLabels={course:'Curso ancla',colab:'Colab interactivo',practice:'Ejercicios',docs:'Documentación',dataset:'Dataset'};
-    return `<a class="sheet-resource" href="${r.url}" target="_blank" rel="noopener">
-      <div class="sheet-resource-icon" style="background:${color}18;">${r.icon}</div>
-      <div class="sheet-resource-info">
-        <div class="sheet-resource-title">${r.name}</div>
-        <div class="sheet-resource-type">${typeLabels[r.type]||'Recurso'}${r.meta?' · '+r.meta:''}</div>
-      </div>
-      <div class="sheet-resource-arrow">↗</div>
-    </a>`;
-  }).join('');
+  // Render missions
+  renderMissionsInSheet(id,color);
 
-  // Tasks
-  document.getElementById('sheet-tasks').innerHTML=(data.tasks||[]).map(t=>`
-    <div class="sheet-task">
-      <div class="sheet-task-dot" style="background:${color}"></div>
-      <div class="sheet-task-text">${t}</div>
-    </div>`).join('');
+  // Resources
+  const resources=data.resources||[];
+  const typeLabels={course:'Curso ancla',colab:'Colab interactivo',practice:'Ejercicios',docs:'Documentación',dataset:'Dataset'};
+  document.getElementById('sheet-resources').innerHTML=resources.length
+    ?resources.map(r=>`<a class="sheet-resource" href="${r.url}" target="_blank" rel="noopener">
+        <div class="sheet-resource-icon" style="background:${color}18;">${r.icon}</div>
+        <div class="sheet-resource-info">
+          <div class="sheet-resource-title">${r.name}</div>
+          <div class="sheet-resource-type">${typeLabels[r.type]||'Recurso'}${r.meta?' · '+r.meta:''}</div>
+        </div>
+        <div class="sheet-resource-arrow">${icon('external',12)}</div>
+      </a>`).join('')
+    :`<div class="mission-empty">Sin recursos curados aún</div>`;
 
-  // Hide time row (we use depth instead now)
+  // Tasks (domain mastery checks)
+  const tasks=data.tasks||[];
+  document.getElementById('sheet-tasks').innerHTML=tasks.length
+    ?tasks.map(t=>`<div class="sheet-task">
+        <div class="sheet-task-dot" style="background:${color}"></div>
+        <div class="sheet-task-text">${t}</div>
+      </div>`).join('')
+    :`<div class="mission-empty">Sin criterios de dominio aún</div>`;
+
   document.getElementById('sheet-time-row').style.display='none';
+}
+
+function renderMissionsInSheet(skillId,color){
+  const el=document.getElementById('sheet-missions');
+  if(!el)return;
+  const missions=MISSIONS_DATA[skillId];
+  const sk=SKILLS_DATA[skillId];
+  if(!missions||!missions.length){
+    el.innerHTML=`<div class="mission-empty">No hay misiones definidas aún para esta skill.<br>Se agregan en cada sesión de trabajo.</div>`;
+    return;
+  }
+  const criteria=sk?.criteria||{};
+  let html='';
+  missions.forEach(ms=>{
+    const done=isMissionDone(skillId,ms.id);
+    const unlocked=isMissionUnlocked(ms,criteria);
+    const mp=getMissionProgress(skillId,ms.id);
+    const doneCount=mp.logrables.filter(Boolean).length;
+    const typeLabel={material:'Estudiar',practice:'Practicar',project:'Proyecto'}[ms.type]||ms.type;
+    const typeColor={material:color,practice:color,project:'#FBBF24'}[ms.type]||color;
+
+    html+=`<div class="mission-card ${done?'done':!unlocked?'locked':''}">
+      <div class="mission-card-head">
+        <div class="mission-type-badge" style="background:${typeColor}22;color:${typeColor}">${typeLabel}</div>
+        <div class="mission-title">${ms.title}</div>
+        <div class="mission-meta">
+          ${done
+            ?`<span class="mission-badge done-badge">${icon('check',11)} Completa</span>`
+            :!unlocked
+              ?`<span class="mission-badge lock-badge">${icon('lock',11)} Bloqueada</span>`
+              :`<span class="mission-badge xp-badge">+${ms.xp} XP</span>`
+          }
+        </div>
+      </div>`;
+
+    if(!unlocked&&!done){
+      // Show what's needed to unlock
+      const reqs=Object.entries(ms.unlock||{}).map(([k,v])=>{
+        const n={material:'Material',practice:'Práctica',project:'Proyecto'}[k]||k;
+        return `${n} ≥${v}%`;
+      }).join(' · ');
+      html+=`<div class="mission-unlock-req">${icon('lock',10)} Requiere: ${reqs}</div>`;
+    } else if(!done){
+      // Logrables checklist
+      html+=`<div class="mission-logrables">`;
+      ms.logrables.forEach((lg,i)=>{
+        const checked=mp.logrables[i]||false;
+        html+=`<div class="lograble ${checked?'checked':''}" id="log-${ms.id}-${i}" onclick="checkLograble('${skillId}','${ms.id}',${i})">
+          <div class="log-check">${checked?icon('check',11):''}</div>
+          <div class="log-text">${lg}</div>
+        </div>`;
+      });
+      html+=`</div>
+      <div class="mission-footer">
+        <span class="mission-count" id="mcount-${ms.id}">${doneCount}/${ms.logrables.length} completados</span>
+        <div class="mission-actions">
+          <a class="mission-link" href="${ms.url}" target="_blank" rel="noopener">${icon('external',11)} Material</a>
+          <button class="mission-pomo-btn" style="border-color:${typeColor}44;color:${typeColor}" onclick="startMissionPomo('${skillId}','${ms.id}','${ms.type==='practice'?'practice':'material'}')">
+            ${icon('timer',11)} Iniciar pomodoro
+          </button>
+        </div>
+      </div>`;
+    } else {
+      // Completed — show summary
+      const when=mp.completedAt?new Date(mp.completedAt).toLocaleDateString('es-CL',{day:'numeric',month:'short'}):'';
+      html+=`<div class="mission-done-info">Completada el ${when} · +${ms.gain}% ${ms.criteriaKey} · +${ms.xp} XP</div>`;
+    }
+
+    html+=`</div>`;
+  });
+  el.innerHTML=html;
 }
 
 function openSheet(){
@@ -3336,6 +3655,838 @@ function resetData(){
 }
 
 /* ═══════════════════════════════════
+   XP ENGINE
+═══════════════════════════════════ */
+const XP_KEY='life_xp';
+const LEVELS=[
+  {level:1, minXP:0,    title:'Explorador',       color:'#A8A8B8'},
+  {level:2, minXP:150,  title:'Aprendiz',          color:'#6E9FFF'},
+  {level:3, minXP:400,  title:'Practicante',       color:'#6E9FFF'},
+  {level:4, minXP:800,  title:'Analista Junior',   color:'#34D399'},
+  {level:5, minXP:1400, title:'Analista de Datos', color:'#34D399'},
+  {level:6, minXP:2200, title:'Analista Senior',   color:'#34D399'},
+  {level:7, minXP:3200, title:'Data Engineer',     color:'#FBBF24'},
+  {level:8, minXP:4500, title:'Data Scientist',    color:'#FBBF24'},
+  {level:9, minXP:6000, title:'Tech Lead',         color:'#A78BFA'},
+  {level:10,minXP:8000, title:'Founder',           color:'#A78BFA'},
+];
+
+// XP amounts per action
+const XP_REWARDS={
+  pomo_material:25,
+  pomo_practice:30,
+  task_done:10,
+  skill_material:100,
+  skill_practice:150,
+  skill_project:200,
+  skill_complete:500,
+};
+
+let XP_DATA={total:0,today:0,todayDate:'',log:[]};
+let xpAnimTimer=null;
+
+/* ═══════════════════════════════════
+   STREAK ENGINE
+═══════════════════════════════════ */
+const STREAK_KEY='life_streak';
+let STREAK_DATA={current:0,best:0,lastStudyDate:'',log:[]};
+
+function isWeekend(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  return d.getDay()===0||d.getDay()===6;
+}
+function getPrevWorkday(dateStr){
+  const d=new Date(dateStr+'T12:00:00');
+  d.setDate(d.getDate()-1);
+  while(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()-1);
+  return d.toISOString().slice(0,10);
+}
+function loadStreak(){
+  try{const s=localStorage.getItem(STREAK_KEY);if(s)STREAK_DATA=JSON.parse(s);}catch(e){}
+  checkStreakStatus();
+  updateStreakUI();
+}
+function saveStreak(){try{localStorage.setItem(STREAK_KEY,JSON.stringify(STREAK_DATA));}catch(e){}}
+
+function checkStreakStatus(){
+  // Called on app open. If yesterday was workday and we didn't study → streak broken.
+  const today=new Date().toISOString().slice(0,10);
+  if(!STREAK_DATA.lastStudyDate||STREAK_DATA.lastStudyDate===today) return;
+  const prevWork=getPrevWorkday(today);
+  if(STREAK_DATA.lastStudyDate<prevWork){
+    // More than 1 workday missed → streak broken
+    STREAK_DATA.current=0;
+    saveStreak();
+  }
+}
+
+function recordStudyDay(){
+  const today=new Date().toISOString().slice(0,10);
+  if(STREAK_DATA.lastStudyDate===today) return; // already recorded today
+  const prevWork=getPrevWorkday(today);
+  if(!STREAK_DATA.lastStudyDate){
+    STREAK_DATA.current=1;
+  } else if(STREAK_DATA.lastStudyDate===prevWork){
+    STREAK_DATA.current++;
+  } else {
+    STREAK_DATA.current=1; // reset — missed a workday
+  }
+  STREAK_DATA.lastStudyDate=today;
+  if(STREAK_DATA.current>STREAK_DATA.best) STREAK_DATA.best=STREAK_DATA.current;
+  STREAK_DATA.log.push({date:today});
+  if(STREAK_DATA.log.length>365) STREAK_DATA.log=STREAK_DATA.log.slice(-365);
+  saveStreak();
+  updateStreakUI();
+}
+
+function getStreakStatus(){
+  const today=new Date().toISOString().slice(0,10);
+  if(STREAK_DATA.current===0) return 'none';
+  if(STREAK_DATA.lastStudyDate===today) return 'active';
+  if(!isWeekend(today)) return 'danger'; // workday but not studied yet
+  return 'active'; // weekend — safe
+}
+
+function updateStreakUI(){
+  const chip=document.getElementById('streak-chip');
+  const num=document.getElementById('streak-num');
+  const ic=document.getElementById('streak-ic');
+  const best=document.getElementById('streak-best');
+  if(!chip) return;
+  const status=getStreakStatus();
+  const cur=STREAK_DATA.current;
+  if(num) num.textContent=cur;
+  if(best) best.textContent='Récord: '+STREAK_DATA.best;
+  chip.className='streak-chip';
+  if(cur===0){
+    chip.classList.add('zero');
+    if(ic) ic.innerHTML=icon('target',14);
+  } else if(status==='active'){
+    chip.classList.add('active');
+    if(ic) ic.innerHTML=icon('flame',14);
+  } else if(status==='danger'){
+    chip.classList.add('danger');
+    if(ic) ic.innerHTML=icon('bolt',14);
+  }
+}
+
+/* ═══════════════════════════════════
+   PROJECTS DATA + ENGINE
+═══════════════════════════════════ */
+const PROJECTS=[
+  // Nivel 0 — siempre desbloqueado
+  {id:'p0',level:0,title:'Hackathon Fintech',
+   desc:'Prototipo con Claude API · 48h · problema abierto · Proyecto 0',
+   icon:'zap',color:'#FBBF24',reqs:{},github:''},
+
+  // Nivel 1 — Early wins
+  {id:'p1',level:1,title:'Dashboard de ventas automatizado',
+   desc:'Conectar datos de ventas a un dashboard con actualizaciones automáticas',
+   icon:'chart',color:'#6E9FFF',reqs:{prog:40,data:35}},
+  {id:'p2',level:1,title:'Análisis financiero empresa real',
+   desc:'Descargar estados financieros reales y analizarlos con Python',
+   icon:'briefcase',color:'#FBBF24',reqs:{prog:35,data:30,fin:25}},
+  {id:'p3',level:1,title:'Bot de automatización de reportes',
+   desc:'Script que genera y envía reportes automáticamente',
+   icon:'terminal',color:'#6E9FFF',reqs:{prog:40}},
+  {id:'p4',level:1,title:'EDA completo con storytelling',
+   desc:'Análisis exploratorio de un dataset real con narrativa visual',
+   icon:'chart',color:'#34D399',reqs:{prog:35,data:35}},
+
+  // Nivel 2 — Portfolio real
+  {id:'p5',level:2,title:'Sistema de evaluación de inversiones',
+   desc:'Modelo que compara proyectos usando VPN, TIR y análisis de riesgo',
+   icon:'target',color:'#FBBF24',reqs:{prog:55,fin:50,data:45}},
+  {id:'p6',level:2,title:'Pipeline de datos automatizado',
+   desc:'ETL completo: extraer, transformar, cargar datos en base de datos',
+   icon:'database',color:'#6E9FFF',reqs:{prog:60,data:50}},
+  {id:'p7',level:2,title:'Modelo predictivo aplicado a negocio',
+   desc:'Modelo ML que resuelve un problema real con datos reales',
+   icon:'brain',color:'#34D399',reqs:{prog:60,data:65,fin:40}},
+  {id:'p8',level:2,title:'Dashboard financiero interactivo',
+   desc:'Dashboard Plotly con métricas financieras en tiempo real',
+   icon:'chart',color:'#FBBF24',reqs:{prog:55,fin:55,data:60}},
+
+  // Nivel 3 — Flagship
+  {id:'p9',level:3,title:'Motor de optimización con PPL',
+   desc:'Optimización matemática aplicada a un problema real de industria',
+   icon:'zap',color:'#A78BFA',reqs:{prog:65,data:60,gest:50}},
+  {id:'p10',level:3,title:'Sistema de análisis financiero con IA',
+   desc:'Combinar LLMs con análisis financiero para insights automáticos',
+   icon:'brain',color:'#A78BFA',reqs:{prog:75,fin:70,data:75}},
+  {id:'p11',level:3,title:'Startup MVP Fintech',
+   desc:'Producto propio funcional: idea, prototipo, validación inicial',
+   icon:'star',color:'#A78BFA',reqs:{prog:70,data:70,fin:70,gest:50}},
+];
+
+function getAreaProgress(areaKey){
+  const branches=BRANCHES[areaKey];
+  if(!branches) return 0;
+  let total=0,count=0;
+  for(const br of branches){
+    for(const node of br.nodes){
+      const sk=SKILLS_DATA[node.id];
+      if(sk){
+        const c=sk.criteria;
+        total+=(c.material+c.practice+c.project)/3;
+        count++;
+      }
+    }
+  }
+  return count?Math.round(total/count):0;
+}
+
+function getProjectPct(proj){
+  const reqs=proj.reqs||{};
+  if(!Object.keys(reqs).length) return 100;
+  const areaMap={
+    prog:getAreaProgress('prog'),
+    data:getAreaProgress('data'),
+    fin:getAreaProgress('fin'),
+    gest:getAreaProgress('gest'),
+  };
+  let totalReq=0,totalCur=0;
+  for(const[area,req] of Object.entries(reqs)){
+    totalReq+=req;
+    totalCur+=Math.min(areaMap[area]||0,req);
+  }
+  return Math.round((totalCur/totalReq)*100);
+}
+
+function isProjectUnlocked(proj){
+  if(!Object.keys(proj.reqs||{}).length) return true;
+  return getProjectPct(proj)>=100;
+}
+
+function getNextProject(){
+  // Returns the locked project with highest completion %
+  const locked=PROJECTS.filter(p=>!isProjectUnlocked(p));
+  if(!locked.length) return null;
+  return locked.sort((a,b)=>getProjectPct(b)-getProjectPct(a))[0];
+}
+
+function updateProjectsUI(){
+  const np=getNextProject();
+  const card=document.getElementById('next-proj-card');
+  if(!card) return;
+  if(!np){
+    card.innerHTML=`<div class="npj-label">PROYECTOS</div><div class="npj-title" style="color:var(--green)">¡Todos desbloqueados!</div>`;
+    return;
+  }
+  const pct=getProjectPct(np);
+  const reqStr=Object.entries(np.reqs).map(([k,v])=>{
+    const names={prog:'Prog',data:'Análisis',fin:'Finanzas',gest:'Gestión'};
+    return `${names[k]} ${v}%`;
+  }).join(' · ');
+  card.innerHTML=`
+    <div class="npj-top">
+      <div class="npj-label">PRÓXIMO PROYECTO</div>
+      <div class="npj-lvl">NIVEL ${np.level}</div>
+    </div>
+    <div class="npj-title">${np.title}</div>
+    <div class="npj-req">${reqStr}</div>
+    <div class="npj-bar-track"><div class="npj-bar-fill" style="width:${pct}%;background:${np.color}"></div></div>
+    <div class="npj-pct">${pct}% completo</div>
+  `;
+}
+
+function openProjects(){
+  renderProjectsSheet();
+  document.getElementById('proj-sheet').classList.add('open');
+  document.getElementById('proj-overlay').classList.add('open');
+}
+function closeProjects(){
+  document.getElementById('proj-sheet').classList.remove('open');
+  document.getElementById('proj-overlay').classList.remove('open');
+}
+
+function renderProjectsSheet(){
+  const body=document.getElementById('proj-body');
+  const areaMap={
+    prog:getAreaProgress('prog'),
+    data:getAreaProgress('data'),
+    fin:getAreaProgress('fin'),
+    gest:getAreaProgress('gest'),
+  };
+  const areaNames={prog:'Prog',data:'Análisis',fin:'Finanzas',gest:'Gestión'};
+  const levelLabels={0:'Proyecto 0',1:'Nivel 1 — Early Wins',2:'Nivel 2 — Portfolio Real',3:'Nivel 3 — Flagship'};
+  const levels=[0,1,2,3];
+  let html='';
+  for(const lv of levels){
+    const projs=PROJECTS.filter(p=>p.level===lv);
+    html+=`<div class="proj-group"><div class="proj-group-title">${levelLabels[lv]}</div>`;
+    for(const p of projs){
+      const unlocked=isProjectUnlocked(p);
+      const pct=getProjectPct(p);
+      const reqItems=Object.entries(p.reqs).map(([k,req])=>{
+        const cur=areaMap[k]||0;
+        const met=cur>=req;
+        return `<span class="proj-req-item ${met?'met':''}">${areaNames[k]} ${cur}/${req}%</span>`;
+      }).join('');
+      html+=`<div class="proj-card ${unlocked?'unlocked':'locked'}">
+        <div class="proj-card-head">
+          <div class="proj-card-ic" style="color:${p.color}">${icon(p.icon,18)}</div>
+          <div class="proj-card-info">
+            <div class="proj-card-title">${p.title}</div>
+            <div class="proj-card-desc">${p.desc}</div>
+          </div>
+          <div class="proj-card-badge ${unlocked?'u':'l'}">${unlocked?'LIBRE':'BLOQUEADO'}</div>
+        </div>
+        ${!unlocked?`
+        <div class="proj-reqs">${reqItems}</div>
+        <div class="proj-bar-track"><div class="proj-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
+        `:''}
+        ${unlocked&&p.github===''?`<div class="proj-action" onclick="event.stopPropagation()">Pendiente · subir a GitHub</div>`:''}
+        ${unlocked&&p.github?`<a class="proj-action linked" href="${p.github}" target="_blank">Ver en GitHub ${icon('external',12)}</a>`:''}
+      </div>`;
+    }
+    html+='</div>';
+  }
+  body.innerHTML=html;
+}
+
+/* ═══════════════════════════════════
+   MISSIONS DATA
+   Schema pensado para migración directa a Supabase:
+   mission_progress(user_id, skill_id, mission_id, logrables JSONB, completed_at)
+═══════════════════════════════════ */
+const MISSIONS_DATA={
+
+  /* ── PYTHON POO ─────────────────────────── */
+  py3:[
+    {id:'m_py3_1',title:'Real Python — OOP Learning Path',type:'material',criteriaKey:'material',gain:30,xp:75,
+     url:'https://realpython.com/learning-paths/object-oriented-programming-oop-python/',
+     unlock:{},
+     logrables:['Leer sección de clases y objetos básicos','Leer herencia y polimorfismo','Anotar métodos dunder clave (__init__, __str__, __repr__)']},
+    {id:'m_py3_2',title:'Exercism — 5 ejercicios de Classes',type:'practice',criteriaKey:'practice',gain:25,xp:80,
+     url:'https://exercism.org/tracks/python/concepts/classes',
+     unlock:{},
+     logrables:['Completar "Ellens Alien Game"','Completar 4 ejercicios adicionales del concepto Classes','Sin ver la solución hasta intentarlo solo']},
+    {id:'m_py3_3',title:'HackerRank — Classes and Objects',type:'practice',criteriaKey:'practice',gain:15,xp:50,
+     url:'https://www.hackerrank.com/challenges/classes-objects/problem',
+     unlock:{practice:20},
+     logrables:['Resolver el desafío de arquitectura de clases']},
+    {id:'m_py3_4',title:'Proyecto: Data Pipeline Cleaner',type:'project',criteriaKey:'project',gain:100,xp:200,
+     url:'https://github.com',
+     unlock:{material:50,practice:40},
+     logrables:['Crear clase base Transformer con método .transform()','Implementar 3 subclases (Nulos, Outliers, Formato)','Crear clase Pipeline que encadena transformaciones','Subir a GitHub con README explicando el diseño OOP']},
+  ],
+
+  /* ── PYTHON FUNDAMENTOS ─────────────────── */
+  py1:[
+    {id:'m_py1_1',title:'CS50P — Semanas 0-3',type:'material',criteriaKey:'material',gain:40,xp:90,
+     url:'https://cs50.harvard.edu/python/2022/',
+     unlock:{},
+     logrables:['Completar Week 0 (Functions, Variables)','Completar Week 1 (Conditionals)','Completar Week 2 (Loops)','Completar Week 3 (Exceptions)']},
+    {id:'m_py1_2',title:'Exercism — Python Basics',type:'practice',criteriaKey:'practice',gain:35,xp:85,
+     url:'https://exercism.org/tracks/python/concepts/basics',
+     unlock:{},
+     logrables:['Completar el concepto Basics en Exercism','Resolver 5 ejercicios adicionales del track']},
+    {id:'m_py1_3',title:'Proyecto: Script de análisis personal',type:'project',criteriaKey:'project',gain:100,xp:150,
+     url:'https://github.com',
+     unlock:{material:40,practice:35},
+     logrables:['Script que lee un CSV y calcula estadísticas básicas','Usar funciones propias (no todo en main)','Manejar errores con try/except','Subir a GitHub con README']},
+  ],
+
+  /* ── GIT PRÁCTICO ───────────────────────── */
+  gt1:[
+    {id:'m_gt1_1',title:'Pro Git — Capítulos 2 y 3',type:'material',criteriaKey:'material',gain:40,xp:70,
+     url:'https://git-scm.com/book/es/v2',
+     unlock:{},
+     logrables:['Leer Capítulo 2: Git Basics completo','Leer Capítulo 3: Git Branching completo']},
+    {id:'m_gt1_2',title:'Learn Git Branching — Parte 1',type:'practice',criteriaKey:'practice',gain:30,xp:80,
+     url:'https://learngitbranching.js.org/?locale=es_ES',
+     unlock:{},
+     logrables:['Completar "Introduction Sequence" (4 niveles)','Completar "Ramping Up" (4 niveles)']},
+    {id:'m_gt1_3',title:'Oh My Git! — Hasta ramas',type:'practice',criteriaKey:'practice',gain:25,xp:65,
+     url:'https://ohmygit.org/',
+     unlock:{practice:25},
+     logrables:['Completar el juego hasta la sección de gestión de ramas']},
+    {id:'m_gt1_4',title:'Proyecto: Collaborative Data Pipeline',type:'project',criteriaKey:'project',gain:100,xp:200,
+     url:'https://github.com',
+     unlock:{material:40,practice:40},
+     logrables:['Crear repo con 2 ramas feature que toquen el mismo archivo','Resolver conflicto de merge documentado','Pull Request con descripción técnica clara','Historial de commits con Conventional Commits']},
+  ],
+
+  /* ── SQL BÁSICO ─────────────────────────── */
+  sq1:[
+    {id:'m_sq1_1',title:'Stanford Databases — Intro',type:'material',criteriaKey:'material',gain:35,xp:80,
+     url:'https://online.stanford.edu/courses/soe-ydatabases-databases',
+     unlock:{},
+     logrables:['Completar el módulo de Modelo Relacional','Entender diferencia entre álgebra relacional y SQL','Identificar PK, FK y cardinalidad en un esquema real']},
+    {id:'m_sq1_2',title:'SQLBolt — Lecciones 1 a 7',type:'practice',criteriaKey:'practice',gain:35,xp:75,
+     url:'https://sqlbolt.com/',
+     unlock:{},
+     logrables:['Completar lecciones SELECT 1-4','Completar lecciones de filtering y sorting (5-7)','Resolver todos los ejercicios sin ver hints']},
+    {id:'m_sq1_3',title:'Proyecto: Schema e-commerce',type:'project',criteriaKey:'project',gain:100,xp:180,
+     url:'https://www.postgresqltutorial.com/',
+     unlock:{material:35,practice:35},
+     logrables:['Diseñar esquema con tablas: usuarios, productos, pedidos, categorías','Normalizar a 3FN (sin redundancia)','Script SQL con CREATE TABLE, relaciones FK','Query de reporte: ventas por categoría y mes']},
+  ],
+
+  /* ── PANDAS ─────────────────────────────── */
+  pd2:[
+    {id:'m_pd2_1',title:'Kaggle Learn — Pandas (6 lecciones)',type:'material',criteriaKey:'material',gain:40,xp:85,
+     url:'https://www.kaggle.com/learn/pandas',
+     unlock:{},
+     logrables:['Creating, Reading, Writing','Indexing, Selecting, Assigning','Summary Functions and Maps','Grouping and Sorting','Data Types and Missing Values','Renaming and Combining']},
+    {id:'m_pd2_2',title:'pandas_exercises — Filtering y Grouping',type:'practice',criteriaKey:'practice',gain:30,xp:80,
+     url:'https://github.com/guipsamora/pandas_exercises',
+     unlock:{material:30},
+     logrables:['Resolver módulo "Filtering and Sorting"','Resolver módulo "Groupby"','Sin usar la solución en el primer intento']},
+    {id:'m_pd2_3',title:'Kaggle — Data Cleaning (5 labs)',type:'practice',criteriaKey:'practice',gain:20,xp:65,
+     url:'https://www.kaggle.com/learn/data-cleaning',
+     unlock:{practice:25},
+     logrables:['Handling Missing Values','Scaling and Normalization','Data Types and Parsing Dates','Character Encodings','Inconsistent Data Entry']},
+    {id:'m_pd2_4',title:'Proyecto: EDA Mercado Inmobiliario',type:'project',criteriaKey:'project',gain:100,xp:200,
+     url:'https://www.kaggle.com/datasets/harlfoxem/housesalesprediction',
+     unlock:{material:40,practice:40},
+     logrables:['Descargar dataset de Kaggle (House Sales)','EDA completo: distribuciones, outliers, correlaciones','Al menos 6 visualizaciones con interpretación','Notebook con narrativa clara (no solo código)','Subir a GitHub con README']},
+  ],
+
+  /* ── NUMPY ──────────────────────────────── */
+  pd1:[
+    {id:'m_pd1_1',title:'Python DS Handbook — Capítulo 2 (NumPy)',type:'material',criteriaKey:'material',gain:40,xp:80,
+     url:'https://jakevdp.github.io/PythonDataScienceHandbook/02.00-introduction-to-numpy.html',
+     unlock:{},
+     logrables:['Leer sección de NumPy arrays y dtype','Leer broadcasting en profundidad','Leer fancy indexing y boolean masks']},
+    {id:'m_pd1_2',title:'100 NumPy Exercises — Primeros 50',type:'practice',criteriaKey:'practice',gain:40,xp:90,
+     url:'https://github.com/rougier/numpy-100',
+     unlock:{material:30},
+     logrables:['Resolver ejercicios 1-25 (básicos)','Resolver ejercicios 26-50 (intermedios)','Usar vectorización — prohibido loops for sobre arrays']},
+    {id:'m_pd1_3',title:'Proyecto: Cálculo vectorizado vs loops',type:'project',criteriaKey:'project',gain:100,xp:160,
+     url:'https://colab.research.google.com',
+     unlock:{material:40,practice:40},
+     logrables:['Implementar operación costosa con loop (baseline)','Reimplementar con vectorización NumPy','Medir speedup con timeit','Implementar rolling window manual con strides','Subir notebook a GitHub']},
+  ],
+
+  /* ── VPN / TIR ──────────────────────────── */
+  fb1:[
+    {id:'m_fb1_1',title:'MIT OCW — Capital Budgeting lecture',type:'material',criteriaKey:'material',gain:35,xp:75,
+     url:'https://ocw.mit.edu/courses/15-401-finance-theory-i-fall-2008/pages/video-lectures-and-slides/capital-budgeting/',
+     unlock:{},
+     logrables:['Ver la lecture completa de Capital Budgeting','Leer el artículo CFI sobre NPV vs IRR','Entender cuándo cada métrica falla (Multiple IRR, non-conventional flows)']},
+    {id:'m_fb1_2',title:'Khan Academy — IRR y NPV',type:'material',criteriaKey:'material',gain:25,xp:60,
+     url:'https://www.khanacademy.org/economics-finance-domain/core-finance/capital-budgeting',
+     unlock:{},
+     logrables:['Completar la sección de Time Value of Money','Completar los ejercicios de NPV y IRR']},
+    {id:'m_fb1_3',title:'FinanceTrain — 10 problemas VPN/TIR',type:'practice',criteriaKey:'practice',gain:45,xp:85,
+     url:'https://financetrain.com/practice-problems-on-npv-and-irr/',
+     unlock:{material:40},
+     logrables:['Resolver 5 problemas de VPN sin calculadora (lápiz y papel)','Resolver 5 problemas de TIR','Verificar con fórmulas Python (numpy.npv / numpy.irr)']},
+    {id:'m_fb1_4',title:'Proyecto: Comparar 2 proyectos de inversión',type:'project',criteriaKey:'project',gain:100,xp:190,
+     url:'https://colab.research.google.com',
+     unlock:{material:50,practice:40},
+     logrables:['Modelar flujos de caja de 2 proyectos reales en Python','Calcular VPN y TIR para ambos','Análisis de sensibilidad: graficar VPN vs tasa de descuento (0-30%)','Redactar conclusión: cuál elegir y por qué','Subir notebook a GitHub']},
+  ],
+
+  /* ── AGILE BÁSICO ───────────────────────── */
+  gf1:[
+    {id:'m_gf1_1',title:'Scrum Guide oficial + Atlassian Agile',type:'material',criteriaKey:'material',gain:40,xp:70,
+     url:'https://scrumguides.org/scrum-guide.html',
+     unlock:{},
+     logrables:['Leer la Scrum Guide completa (2021 edition)','Leer la guía de Atlassian sobre Agile frameworks','Identificar: 3 roles, 5 eventos y 3 artefactos de Scrum']},
+    {id:'m_gf1_2',title:'Scrum.org Open Assessment',type:'practice',criteriaKey:'practice',gain:50,xp:90,
+     url:'https://www.scrum.org/open-assessments/scrum-open',
+     unlock:{material:30},
+     logrables:['Hacer el assessment por primera vez (baseline)','Estudiar las respuestas incorrectas','Aprobar con 85%+ en el segundo intento']},
+    {id:'m_gf1_3',title:'Proyecto: Kanban de portafolio personal',type:'project',criteriaKey:'project',gain:100,xp:160,
+     url:'https://trello.com',
+     unlock:{material:40,practice:45},
+     logrables:['Crear tablero en Trello o GitHub Projects','Definir columnas: Backlog → In Progress → Review → Done','Agregar los proyectos técnicos como User Stories','Configurar WIP limits','Subir screenshot del tablero al README del repo principal']},
+  ],
+
+  /* ── ESTADÍSTICA DESCRIPTIVA ────────────── */
+  st1:[
+    {id:'m_st1_1',title:'Khan Academy — Estadística y probabilidad',type:'material',criteriaKey:'material',gain:40,xp:75,
+     url:'https://www.khanacademy.org/math/statistics-probability',
+     unlock:{},
+     logrables:['Completar unidad de Displaying and Comparing Data','Completar unidad de Summarizing Quantitative Data','Completar unidad de Modeling Data Distributions']},
+    {id:'m_st1_2',title:'StatQuest — Statistics Fundamentals playlist',type:'material',criteriaKey:'material',gain:25,xp:60,
+     url:'https://www.youtube.com/playlist?list=PLblh5JKOoLUK0FLuzwntyYI10UQFUhsY9',
+     unlock:{},
+     logrables:['Ver los 6 primeros videos de la playlist','Rehacer los cálculos de media, mediana y varianza a mano']},
+    {id:'m_st1_3',title:'Aplicar en Python con dataset real',type:'practice',criteriaKey:'practice',gain:50,xp:90,
+     url:'https://www.kaggle.com/datasets',
+     unlock:{material:40},
+     logrables:['Descargar cualquier dataset de Kaggle con columnas numéricas','Calcular media, mediana, moda, std, skewness sin usar .describe()','Visualizar distribuciones y detectar outliers','Interpretar en texto qué dice cada métrica sobre los datos']},
+  ],
+};
+
+/* ─── Missions Progress (maps to Supabase: mission_progress table) ─── */
+const MISSIONS_PROGRESS_KEY='life_missions_progress';
+let MISSIONS_PROGRESS={};
+// Schema: { [skillId]: { [missionId]: { logrables:[bool], completedAt:ISO|null } } }
+
+function loadMissions(){
+  try{
+    const s=localStorage.getItem(MISSIONS_PROGRESS_KEY);
+    if(s)MISSIONS_PROGRESS=JSON.parse(s);
+  }catch(e){}
+}
+function saveMissions(){
+  try{localStorage.setItem(MISSIONS_PROGRESS_KEY,JSON.stringify(MISSIONS_PROGRESS));}catch(e){}
+}
+
+function getMissionProgress(skillId,missionId){
+  const sk=MISSIONS_PROGRESS[skillId];
+  if(!sk||!sk[missionId])return{logrables:[],completedAt:null};
+  return sk[missionId];
+}
+
+function isMissionDone(skillId,missionId){
+  return !!getMissionProgress(skillId,missionId).completedAt;
+}
+
+function isMissionUnlocked(mission,skillCriteria){
+  const req=mission.unlock||{};
+  for(const[k,v]of Object.entries(req)){
+    if((skillCriteria[k]||0)<v)return false;
+  }
+  return true;
+}
+
+function checkLograble(skillId,missionId,idx){
+  if(!MISSIONS_PROGRESS[skillId])MISSIONS_PROGRESS[skillId]={};
+  if(!MISSIONS_PROGRESS[skillId][missionId]){
+    const ms=MISSIONS_DATA[skillId]?.find(m=>m.id===missionId);
+    const n=ms?.logrables?.length||0;
+    MISSIONS_PROGRESS[skillId][missionId]={logrables:Array(n).fill(false),completedAt:null};
+  }
+  const mp=MISSIONS_PROGRESS[skillId][missionId];
+  // If already done, uncheck (allow re-do)
+  mp.logrables[idx]=!mp.logrables[idx];
+
+  // Check if all done → complete mission
+  const ms=MISSIONS_DATA[skillId]?.find(m=>m.id===missionId);
+  const allDone=mp.logrables.length>0&&mp.logrables.every(Boolean);
+  if(allDone&&!mp.completedAt){
+    mp.completedAt=new Date().toISOString();
+    saveMissions();
+    completeMission(skillId,ms);
+    return;
+  }
+  saveMissions();
+  // Update lograble UI
+  const el=document.getElementById(`log-${missionId}-${idx}`);
+  if(el){
+    el.classList.toggle('checked',mp.logrables[idx]);
+    el.querySelector('.log-check').innerHTML=mp.logrables[idx]?icon('check',12):'';
+  }
+  // Update mission progress count
+  updateMissionCountUI(skillId,missionId);
+}
+
+function completeMission(skillId,mission){
+  // Award XP
+  gainXP(mission.xp,`Misión: ${mission.title}`);
+  recordStudyDay();
+  // Update skill criteria
+  const sk=SKILLS_DATA[skillId];
+  if(sk&&mission.criteriaKey){
+    sk.criteria[mission.criteriaKey]=Math.min(100,(sk.criteria[mission.criteriaKey]||0)+mission.gain);
+    saveSkillsProgress();
+  }
+  updateProjectsUI();
+  renderDayBlocks();
+  // Re-render the sheet to reflect completion
+  if(CURRENT_NODE_ID===skillId){
+    setTimeout(()=>renderMissionsInSheet(skillId,CURRENT_NODE_COLOR),300);
+  }
+}
+
+function updateMissionCountUI(skillId,missionId){
+  const mp=getMissionProgress(skillId,missionId);
+  const done=mp.logrables.filter(Boolean).length;
+  const total=mp.logrables.length;
+  const countEl=document.getElementById(`mcount-${missionId}`);
+  if(countEl)countEl.textContent=`${done}/${total}`;
+}
+
+function startMissionPomo(skillId,missionId,kind){
+  const ms=MISSIONS_DATA[skillId]?.find(m=>m.id===missionId);
+  CURRENT_NODE_ID=skillId;
+  POMO.title=ms?.title||'Misión';
+  POMO.missionId=missionId;
+  startPomodoro(kind);
+  closeSheet();
+}
+
+/* ═══════════════════════════════════
+   SKILLS PROGRESS — PERSISTENCE
+═══════════════════════════════════ */
+const SKILLS_PROGRESS_KEY='life_skills_progress';
+
+function saveSkillsProgress(){
+  const prog={};
+  for(const[id,sk]of Object.entries(SKILLS_DATA)) prog[id]=sk.criteria;
+  try{localStorage.setItem(SKILLS_PROGRESS_KEY,JSON.stringify(prog));}catch(e){}
+}
+function loadSkillsProgress(){
+  try{
+    const s=localStorage.getItem(SKILLS_PROGRESS_KEY);
+    if(s){const prog=JSON.parse(s);for(const[id,c]of Object.entries(prog)){if(SKILLS_DATA[id])SKILLS_DATA[id].criteria=c;}}
+  }catch(e){}
+}
+function updateCriteria(skillId,key,delta){
+  const sk=SKILLS_DATA[skillId];
+  if(!sk)return;
+  sk.criteria[key]=Math.max(0,Math.min(100,(sk.criteria[key]||0)+delta));
+  saveSkillsProgress();
+  const pctEl=document.getElementById(`cpct-${skillId}-${key}`);
+  const barEl=document.getElementById(`cbar-${skillId}-${key}`);
+  if(pctEl)pctEl.textContent=sk.criteria[key]+'%';
+  if(barEl){
+    const v=sk.criteria[key];
+    barEl.style.width=v+'%';
+    barEl.style.background=v>=85?'var(--green)':v>=50?'var(--blue)':'rgba(110,159,255,.4)';
+  }
+  updateProjectsUI();
+  renderDayBlocks();
+}
+
+/* ═══════════════════════════════════
+   DAY BLOCKS ENGINE
+═══════════════════════════════════ */
+const DAY_AREA_MAP={1:'prog',2:'data',3:null,4:'fin',5:null,6:null,0:null};
+const AREA_LABELS={prog:'Programación',data:'Análisis de Datos',fin:'Finanzas',gest:'Gestión'};
+
+function getDayArea(){return DAY_AREA_MAP[new Date().getDay()];}
+
+function getWIPSkill(areaKey){
+  const branches=BRANCHES[areaKey];
+  if(!branches)return null;
+  let best=null,bestScore=-1,firstLocked=null,lowestScore=Infinity;
+  for(const br of branches){
+    for(const node of br.nodes){
+      const sk=SKILLS_DATA[node.id];
+      if(!sk)continue;
+      const c=sk.criteria;
+      const avg=(c.material+c.practice+c.project)/3;
+      if(avg>0&&avg<85&&avg>bestScore){bestScore=avg;best={id:node.id,full:node.full,sk,branch:br.name};}
+      if(avg<85&&avg<lowestScore){lowestScore=avg;firstLocked={id:node.id,full:node.full,sk,branch:br.name};}
+    }
+  }
+  return best||firstLocked;
+}
+
+function getAcademicEventsToday(){
+  const today=new Date().toISOString().slice(0,10);
+  return (CAL_EVENTS||[]).filter(e=>e.date===today);
+}
+
+function renderDayBlocks(){
+  const container=document.getElementById('day-blocks-container');
+  if(!container)return;
+  const dow=new Date().getDay();
+  if(dow===0||dow===6){
+    container.innerHTML=`<div class="blk" style="text-align:center;padding:24px 18px;">
+      <div class="bcat" style="color:var(--text-3);margin-bottom:6px">FIN DE SEMANA</div>
+      <div class="bnm" style="color:var(--text-2)">Descanso — trabajas hoy</div></div>`;
+    return;
+  }
+  let html='';
+  const areaKey=getDayArea();
+  const A=areaKey?AREAS[areaKey]:null;
+  const todayEvents=getAcademicEventsToday();
+
+  /* 01 ACADÉMICO */
+  const ac='#A78BFA';
+  html+=`<div class="blk"><div class="acc" style="background:${ac}"></div>
+    <div class="bhdr"><div><div class="bcat" style="color:${ac}">01 · Académico</div><div class="bnm">Agenda del día</div></div>
+    <div class="badge bd">${todayEvents.length?'HOY':'LIBRE'}</div></div><div class="tasks">`;
+  if(todayEvents.length){
+    todayEvents.slice(0,4).forEach(ev=>{
+      html+=`<div class="task"><div class="chk"></div>${escapeHtml(ev.title)}<div class="ttime">${ev.time||''}</div></div>`;
+    });
+  } else {
+    html+=`<div class="task"><div class="chk"></div><span style="color:var(--text-3)">Sin eventos en la agenda hoy</span></div>`;
+  }
+  html+=`</div></div>`;
+
+  /* 02 MISIÓN */
+  const mc=A?A.color:'#6E9FFF';
+  const ml=A?AREA_LABELS[areaKey]:'Libre';
+  html+=`<div class="blk"><div class="acc" style="background:${mc}"></div>
+    <div class="bhdr"><div><div class="bcat" style="color:${mc}">02 · Misión · ${ml}</div>`;
+  if(dow===5){
+    // Viernes — libre
+    html+=`<div class="bnm">Día libre o proyecto</div></div><div class="badge bp">VIERNES</div></div>
+      <div class="tasks">
+        <div class="task"><div class="chk"></div>Avanzar en el próximo proyecto</div>
+        <div class="task"><div class="chk"></div>Revisar progreso semanal en el árbol</div>
+      </div>`;
+  } else if(areaKey){
+    const wip=getWIPSkill(areaKey);
+    if(wip){
+      const avg=Math.round((wip.sk.criteria.material+wip.sk.criteria.practice+wip.sk.criteria.project)/3);
+      html+=`<div class="bnm">${escapeHtml(wip.full)}</div></div><div class="badge ba">${avg}%</div></div>
+        <div class="tasks">`;
+      (wip.sk.tasks||[]).slice(0,3).forEach(t=>{
+        html+=`<div class="task"><div class="chk"></div>${escapeHtml(t)}</div>`;
+      });
+      if(!(wip.sk.tasks||[]).length)html+=`<div class="task"><div class="chk"></div>Estudiar ${escapeHtml(wip.full)}</div>`;
+      html+=`</div>
+        <button class="blk-skill-btn" style="color:${mc};border-color:${mc}44" onclick="openSkillFromNode('${wip.id}','${areaKey}')">Ver skill y marcar progreso →</button>`;
+    } else {
+      html+=`<div class="bnm">¡Área completa!</div></div><div class="badge bd">COMPLETO</div></div>
+        <div class="tasks"><div class="task done"><div class="chk done"></div>Todas las skills completadas</div></div>`;
+    }
+  } else {
+    html+=`<div class="bnm">Clases (miércoles)</div></div><div class="badge">ICI</div></div>
+      <div class="tasks"><div class="task"><div class="chk"></div>Ver la agenda académica</div></div>`;
+  }
+  html+=`</div>`;
+
+  /* 03 PROYECTO */
+  const pc='#FBBF24';
+  const np=getNextProject();
+  const proj=np||PROJECTS[0];
+  const pct=proj?getProjectPct(proj):0;
+  const unlocked=proj&&isProjectUnlocked(proj);
+  html+=`<div class="blk"><div class="acc" style="background:${pc}"></div>
+    <div class="bhdr"><div><div class="bcat" style="color:${pc}">03 · Proyecto</div>
+    <div class="bnm">${proj?escapeHtml(proj.title):'Sin proyecto'}</div></div>
+    <div class="badge ${unlocked?'bd':'bp'}">${unlocked?'LIBRE':pct+'%'}</div></div>
+    <div class="tasks">
+      ${unlocked
+        ?`<div class="task"><div class="chk"></div>Crear repo en GitHub con README</div>
+           <div class="task"><div class="chk"></div>Definir alcance y primer commit</div>`
+        :`<div class="task"><div class="chk"></div>Seguir avanzando en las skills (${pct}% desbloqueado)</div>
+           <div class="task"><div class="chk"></div><span style="color:var(--text-3)">${proj?escapeHtml(proj.desc):''}</span></div>`
+      }
+    </div>
+    <button class="blk-skill-btn" style="color:${pc};border-color:${pc}44" onclick="openProjects()">Ver todos los proyectos →</button>
+  </div>`;
+
+  container.innerHTML=html;
+}
+
+function openSkillFromNode(nodeId,areaKey){
+  const branches=BRANCHES[areaKey];
+  if(!branches)return;
+  for(const br of branches){
+    const node=br.nodes.find(n=>n.id===nodeId);
+    if(node){
+      openTree(areaKey);
+      setTimeout(()=>{
+        if(typeof triggerZoom==='function') triggerZoom(areaKey);
+        setTimeout(()=>nodeClick(nodeId,'wip',node.full,AREAS[areaKey].color),400);
+      },400);
+      return;
+    }
+  }
+}
+
+function loadXP(){
+  try{
+    const s=localStorage.getItem(XP_KEY);
+    if(s) XP_DATA=JSON.parse(s);
+    // Reset today's XP if it's a new day
+    const today=new Date().toISOString().slice(0,10);
+    if(XP_DATA.todayDate!==today){XP_DATA.today=0;XP_DATA.todayDate=today;}
+  }catch(e){}
+  updateXPStrip();
+}
+
+function saveXP(){try{localStorage.setItem(XP_KEY,JSON.stringify(XP_DATA));}catch(e){}}
+
+function getLevelInfo(xp){
+  let cur=LEVELS[0];
+  for(const l of LEVELS){if(xp>=l.minXP)cur=l;else break;}
+  const idx=LEVELS.indexOf(cur);
+  const next=LEVELS[idx+1]||null;
+  const pct=next?Math.min(100,Math.round(((xp-cur.minXP)/(next.minXP-cur.minXP))*100)):100;
+  return{cur,next,pct,idx};
+}
+
+function gainXP(amount,reason){
+  const prevTotal=XP_DATA.total;
+  XP_DATA.total+=amount;
+  XP_DATA.today+=amount;
+  XP_DATA.log.push({amount,reason,ts:Date.now()});
+  if(XP_DATA.log.length>200) XP_DATA.log=XP_DATA.log.slice(-200);
+  saveXP();
+  updateXPStrip();
+  showXPAnim(amount,prevTotal,XP_DATA.total);
+}
+
+function updateXPStrip(){
+  // Update home XP strip with real data
+  const xpvEl=document.getElementById('xp-today-val');
+  const xpnEl=document.getElementById('xp-level-label');
+  const xpbEl=document.getElementById('xp-level-bar');
+  if(!xpvEl)return;
+  const{cur,next,pct}=getLevelInfo(XP_DATA.total);
+  xpvEl.textContent='+'+XP_DATA.today+' xp';
+  xpnEl.textContent=`NIVEL ${cur.level} — ${cur.title}${next?' → '+next.title:''}`;
+  if(xpbEl){
+    xpbEl.innerHTML=`<div style="width:${pct}%;height:100%;background:linear-gradient(90deg,${cur.color},${cur.color}99);border-radius:3px;transition:width 1s ease"></div>`;
+  }
+}
+
+let xpAnimTimeout=null;
+function showXPAnim(amount,prevTotal,newTotal){
+  const prevInfo=getLevelInfo(prevTotal);
+  const newInfo=getLevelInfo(newTotal);
+  const leveledUp=newInfo.cur.level>prevInfo.cur.level;
+
+  const overlay=document.getElementById('xp-overlay');
+  const card=document.getElementById('xp-card');
+  if(!overlay||!card)return;
+
+  // Clear any running animation
+  if(xpAnimTimeout){clearTimeout(xpAnimTimeout);overlay.classList.remove('show','hide');card.classList.remove('levelup');}
+  document.getElementById('xp-bar-fill').style.width='0%';
+
+  // Populate content
+  document.getElementById('xp-amount').textContent='+'+amount+' XP';
+  document.getElementById('xp-level-num').textContent='NIVEL '+newInfo.cur.level;
+  document.getElementById('xp-level-title').textContent=newInfo.cur.title;
+  document.getElementById('xp-level-title').style.color=newInfo.cur.color;
+
+  if(leveledUp){
+    document.getElementById('xp-label').textContent='¡NIVEL NUEVO!';
+    card.classList.add('levelup');
+  } else {
+    document.getElementById('xp-label').textContent='SESIÓN COMPLETADA';
+    card.classList.remove('levelup');
+  }
+
+  if(newInfo.next){
+    document.getElementById('xp-bar-cur').textContent=newTotal+' XP';
+    document.getElementById('xp-bar-next').textContent='→ '+newInfo.next.minXP+' XP · '+newInfo.next.title;
+  } else {
+    document.getElementById('xp-bar-cur').textContent=newTotal+' XP';
+    document.getElementById('xp-bar-next').textContent='Nivel máximo alcanzado';
+  }
+
+  // Animate in
+  overlay.classList.add('show');
+
+  // Fill bar after card appears
+  setTimeout(()=>{
+    document.getElementById('xp-bar-fill').style.width=newInfo.pct+'%';
+  },350);
+
+  // Auto-dismiss after 4s
+  xpAnimTimeout=setTimeout(()=>{
+    overlay.classList.add('hide');
+    xpAnimTimeout=setTimeout(()=>{
+      overlay.classList.remove('show','hide');
+      card.classList.remove('levelup');
+    },400);
+  },4000);
+
+  // Tap to dismiss early
+  overlay.onclick=()=>{
+    if(xpAnimTimeout){clearTimeout(xpAnimTimeout);}
+    overlay.classList.add('hide');
+    setTimeout(()=>overlay.classList.remove('show','hide','levelup'),400);
+  };
+}
+
+/* ═══════════════════════════════════
    POMODORO ENGINE
 ═══════════════════════════════════ */
 let POMO={active:false,paused:false,phase:'focus',endsAt:null,pausedRemain:null,cycle:1,nodeId:null,kind:'material',config:Object.assign({},POMO_DEFAULT)};
@@ -3461,15 +4612,17 @@ function updatePomoUI(){
 function onPomoPhaseEnd(){
   // Notification sound
   beepPomo();
-  // If was focus, increment progress on the skill
+  // If was focus, increment progress on the skill + gain XP
   if(POMO.phase==='focus' && POMO.nodeId && SKILLS_DATA[POMO.nodeId]){
     const skill=SKILLS_DATA[POMO.nodeId];
-    const minsAdded=POMO.config.focusMin/60; // ratio of 1 hour
-    // Each focus session of 50min adds ~6% to material/practice
     const inc=Math.round((POMO.config.focusMin/50)*6);
     const key=POMO.kind==='material'?'material':'practice';
     skill.criteria[key]=Math.min(100,skill.criteria[key]+inc);
     showToast(`+${inc}% en ${POMO.kind==='material'?'Material':'Práctica'}`);
+    // Gain XP
+    const xpAmt=POMO.kind==='material'?XP_REWARDS.pomo_material:XP_REWARDS.pomo_practice;
+    gainXP(xpAmt,`Pomodoro ${POMO.kind} · ${POMO.config.focusMin}min`);
+    recordStudyDay(); // update streak
   }
   // Determine next phase
   if(POMO.phase==='focus'){
@@ -3527,7 +4680,7 @@ function beepPomo(){
 }
 
 // Resume on page load
-window.addEventListener('load',()=>{loadSettings();loadPomo();});
+window.addEventListener('load',()=>{loadSettings();loadSkillsProgress();loadMissions();loadPomo();loadXP();loadStreak();updateProjectsUI();renderDayBlocks();});
 
 /* ═══════════ ZOOM ENGINE ═══════════ */
 let zS=1,zX=0,zY=0;
