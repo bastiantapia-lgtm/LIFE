@@ -3758,30 +3758,19 @@ function initSupabase(){
 
 async function checkAuthAndLoad(){
   if(!SB_READY){showAuthScreen();return;}
-  try{
-    const{data:{session}}=await sb.auth.getSession();
-    if(session){
-      SB_USER=session.user;
-      updateSyncBadge('syncing');
-      await syncFromSupabase(SB_USER.id);
-      updateSyncBadge('synced');
-      updateSidebarUser();
-      hideAuthScreen();
-    } else {
-      showAuthScreen();
-    }
-  }catch(e){console.warn('Auth check failed',e);showAuthScreen();}
 
-  // Listen for future auth changes
-  if(SB_READY) sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_IN'&&session){
+  // Register listener FIRST — fires immediately with INITIAL_SESSION
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if((event==='SIGNED_IN'||event==='INITIAL_SESSION')&&session){
       SB_USER=session.user;
       updateSyncBadge('syncing');
-      await syncFromSupabase(SB_USER.id);
+      try{await syncFromSupabase(SB_USER.id);}catch(e){console.warn(e);}
       updateSyncBadge('synced');
       updateSidebarUser();
       hideAuthScreen();
       initApp();
+    } else if(event==='INITIAL_SESSION'&&!session){
+      showAuthScreen();
     } else if(event==='SIGNED_OUT'){
       SB_USER=null;
       updateSyncBadge('offline');
