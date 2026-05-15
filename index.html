@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>LIFE</title>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <!-- PWA -->
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#0A0A0F">
@@ -675,6 +677,26 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 .mission-pomo-btn:hover{opacity:.75;}
 .mission-empty{font-size:12px;color:var(--text-3);text-align:center;padding:16px 0;line-height:1.5;}
 
+/* ── AUTH SCREEN ── */
+.auth-screen{position:fixed;inset:0;background:var(--body);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px;}
+.auth-card{display:flex;flex-direction:column;align-items:center;gap:0;max-width:360px;width:100%;text-align:center;}
+.auth-logo-mark{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 8px 32px rgba(110,159,255,.3);}
+.auth-logo-l{font-size:36px;font-weight:800;color:#fff;letter-spacing:-.04em;}
+.auth-title{font-size:28px;font-weight:800;color:var(--text);letter-spacing:-.025em;margin-bottom:8px;}
+.auth-subtitle{font-size:13px;color:var(--text-3);line-height:1.5;margin-bottom:36px;}
+.auth-google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;padding:14px 20px;cursor:pointer;font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--text);transition:all .2s;margin-bottom:14px;}
+.auth-google-btn:hover{background:var(--surface-2);border-color:var(--blue);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.auth-google-btn svg{flex-shrink:0;}
+.auth-skip{font-family:var(--font-mono);font-size:11px;color:var(--text-3);cursor:pointer;padding:8px;transition:color .15s;}
+.auth-skip:hover{color:var(--text-2);}
+.auth-note{font-size:11px;color:var(--text-3);margin-top:20px;line-height:1.5;max-width:280px;}
+.auth-loading{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;color:var(--text-3);}
+.auth-loading-dot{width:6px;height:6px;background:var(--blue);border-radius:50%;animation:dotPulse 1.2s ease-in-out infinite;}
+/* Sync indicator (top of sidebar) */
+.sync-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--r-pill);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2);font-family:var(--font-mono);font-size:9px;color:var(--green);letter-spacing:.06em;margin-bottom:24px;}
+.sync-badge.syncing{background:rgba(110,159,255,.1);border-color:rgba(110,159,255,.2);color:var(--blue);}
+.sync-badge.offline{background:rgba(255,255,255,.04);border-color:var(--border);color:var(--text-3);}
+
 /* Blok skill btn */
 .blk-skill-btn{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.04em;padding:6px 12px;border-radius:var(--r-pill);border:1px solid;background:transparent;cursor:pointer;margin-top:10px;transition:opacity .15s;}
 .blk-skill-btn:hover{opacity:.75;}
@@ -824,6 +846,21 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
 </style>
 </head>
 <body>
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="auth-screen" style="display:none">
+  <div class="auth-card">
+    <div class="auth-logo-mark"><div class="auth-logo-l">L</div></div>
+    <div class="auth-title">LIFE</div>
+    <div class="auth-subtitle">Tu desarrollo profesional como un RPG.<br>Sincronizá tu progreso entre dispositivos.</div>
+    <button class="auth-google-btn" onclick="signInWithGoogle()">
+      <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+      Continuar con Google
+    </button>
+    <div class="auth-skip" onclick="skipAuth()">Usar sin cuenta (solo este dispositivo) →</div>
+    <div class="auth-note">Con cuenta: tu progreso, XP y habilidades se sincronizan en todos tus dispositivos y recibirás notificaciones del pomodoro en tu iPhone.</div>
+  </div>
+</div>
+
 <div class="phone" id="phone">
   <div class="notch"></div>
   <div class="sbar"><span id="clock">08:42</span><span>▲▲▲ 🔋</span></div>
@@ -852,11 +889,15 @@ body{background:var(--body);display:flex;justify-content:center;align-items:cent
       </div>
     </div>
     <div class="dnav-footer">
-      <div class="dnav-account">
+      <div class="sync-badge offline" id="sync-badge">
+        <span id="sync-dot" style="width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0"></span>
+        <span id="sync-label">SIN CUENTA</span>
+      </div>
+      <div class="dnav-account" onclick="openSettings()">
         <span class="dnav-account-ic" id="dnav-account-ic"></span>
         <div>
           <div class="dnav-account-name" id="dnav-account-name">Bastian</div>
-          <div class="dnav-account-meta">v0.1 · prototipo</div>
+          <div class="dnav-account-meta" id="dnav-account-meta">v0.1 · prototipo</div>
         </div>
       </div>
     </div>
@@ -3693,6 +3734,226 @@ let XP_DATA={total:0,today:0,todayDate:'',log:[]};
 let xpAnimTimer=null;
 
 /* ═══════════════════════════════════
+   SUPABASE ENGINE
+   offline-first: localStorage = primary, Supabase = sync layer
+═══════════════════════════════════ */
+const SB_URL='https://suwzywduxomvqzicmqwv.supabase.co';
+const SB_KEY='sb_publishable_VoCncHixPpHQHhu0-PEJqA_CLAPa5ns';
+let sb=null;
+let SB_USER=null;
+let SB_READY=false;
+
+function initSupabase(){
+  try{
+    sb=window.supabase.createClient(SB_URL,SB_KEY,{
+      auth:{
+        autoRefreshToken:true,
+        persistSession:true,
+        detectSessionInUrl:true,
+      }
+    });
+    SB_READY=true;
+  }catch(e){console.warn('Supabase init failed',e);}
+}
+
+async function checkAuthAndLoad(){
+  if(!SB_READY){showAuthScreen();return;}
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    if(session){
+      SB_USER=session.user;
+      updateSyncBadge('syncing');
+      await syncFromSupabase(SB_USER.id);
+      updateSyncBadge('synced');
+      updateSidebarUser();
+      hideAuthScreen();
+    } else {
+      showAuthScreen();
+    }
+  }catch(e){console.warn('Auth check failed',e);showAuthScreen();}
+
+  // Listen for future auth changes
+  if(SB_READY) sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_IN'&&session){
+      SB_USER=session.user;
+      updateSyncBadge('syncing');
+      await syncFromSupabase(SB_USER.id);
+      updateSyncBadge('synced');
+      updateSidebarUser();
+      hideAuthScreen();
+      initApp();
+    } else if(event==='SIGNED_OUT'){
+      SB_USER=null;
+      updateSyncBadge('offline');
+      showAuthScreen();
+    }
+  });
+}
+
+function showAuthScreen(){
+  const s=document.getElementById('auth-screen');
+  if(s)s.style.display='flex';
+}
+function hideAuthScreen(){
+  const s=document.getElementById('auth-screen');
+  if(s)s.style.display='none';
+}
+
+async function signInWithGoogle(){
+  if(!SB_READY)return;
+  const{error}=await sb.auth.signInWithOAuth({
+    provider:'google',
+    options:{redirectTo:window.location.origin}
+  });
+  if(error)showToast('Error al iniciar sesión');
+}
+
+function skipAuth(){
+  hideAuthScreen();
+  updateSyncBadge('offline');
+  initApp();
+}
+
+async function signOut(){
+  if(sb)await sb.auth.signOut();
+  SB_USER=null;
+  updateSyncBadge('offline');
+  showToast('Sesión cerrada');
+  showAuthScreen();
+}
+
+function updateSyncBadge(state){
+  const badge=document.getElementById('sync-badge');
+  const label=document.getElementById('sync-label');
+  if(!badge||!label)return;
+  badge.className='sync-badge '+(state==='synced'?'':(state==='syncing'?'syncing':'offline'));
+  label.textContent=state==='synced'?'SINCRONIZADO':state==='syncing'?'SINCRONIZANDO...':'SIN CUENTA';
+}
+
+function updateSidebarUser(){
+  if(!SB_USER)return;
+  const name=SB_USER.user_metadata?.name||SB_USER.email?.split('@')[0]||'Bastian';
+  const email=SB_USER.email||'';
+  const nameEl=document.getElementById('dnav-account-name');
+  const metaEl=document.getElementById('dnav-account-meta');
+  if(nameEl)nameEl.textContent=name;
+  if(metaEl)metaEl.textContent=email;
+}
+
+// ── SYNC FROM SUPABASE → localStorage ─────────────
+async function syncFromSupabase(userId){
+  if(!sb||!userId)return;
+  try{
+    const[settings,skills,missions,xp,streak,events]=await Promise.all([
+      sb.from('settings').select('*').eq('user_id',userId).maybeSingle(),
+      sb.from('skill_progress').select('*').eq('user_id',userId),
+      sb.from('mission_progress').select('*').eq('user_id',userId),
+      sb.from('xp_data').select('*').eq('user_id',userId).maybeSingle(),
+      sb.from('streak_data').select('*').eq('user_id',userId).maybeSingle(),
+      sb.from('cal_events').select('*').eq('user_id',userId),
+    ]);
+
+    // Settings
+    if(settings.data){
+      const d=settings.data;
+      if(d.appearance)SETTINGS.appearance=d.appearance;
+      if(d.pomodoro)SETTINGS.pomodoro=d.pomodoro;
+      if(d.weights)SETTINGS.weights=d.weights;
+      if(d.notifications)SETTINGS.notifications=d.notifications;
+      saveSettings();
+    }
+    // Skill progress
+    if(skills.data?.length){
+      skills.data.forEach(r=>{
+        if(SKILLS_DATA[r.skill_id])SKILLS_DATA[r.skill_id].criteria={
+          material:r.material||0,practice:r.practice||0,
+          project:r.project||0,explanation:r.explanation||0
+        };
+      });
+      saveSkillsProgress();
+    }
+    // Missions
+    if(missions.data?.length){
+      missions.data.forEach(r=>{
+        if(!MISSIONS_PROGRESS[r.skill_id])MISSIONS_PROGRESS[r.skill_id]={};
+        MISSIONS_PROGRESS[r.skill_id][r.mission_id]={
+          logrables:r.logrables||[],completedAt:r.completed_at
+        };
+      });
+      saveMissions();
+    }
+    // XP
+    if(xp.data){
+      XP_DATA={total:xp.data.total||0,today:xp.data.today||0,
+        todayDate:xp.data.today_date||'',log:xp.data.log||[]};
+      saveXP();
+    }
+    // Streak
+    if(streak.data){
+      STREAK_DATA={current:streak.data.current_streak||0,best:streak.data.best_streak||0,
+        lastStudyDate:streak.data.last_study_date||'',log:streak.data.log||[]};
+      saveStreak();
+    }
+    // Events
+    if(events.data?.length){
+      CAL_EVENTS=events.data.map(e=>({
+        id:e.id,title:e.title,date:e.date,time:e.time||'',
+        important:e.important||false,category:e.category||'work',prepDays:e.prep_days||14
+      }));
+      saveEvents();
+    }
+    console.log('✓ LIFE synced from Supabase');
+  }catch(e){console.warn('Supabase sync error',e);}
+}
+
+// ── PUSH TO SUPABASE (called after each data change) ──
+async function pushToSupabase(){
+  if(!sb||!SB_USER)return;
+  const uid=SB_USER.id;
+  updateSyncBadge('syncing');
+  try{
+    await sb.from('settings').upsert({
+      user_id:uid,appearance:SETTINGS.appearance,pomodoro:SETTINGS.pomodoro,
+      weights:SETTINGS.weights,notifications:SETTINGS.notifications,
+      updated_at:new Date().toISOString()
+    });
+    const skillRows=Object.entries(SKILLS_DATA).map(([id,sk])=>({
+      user_id:uid,skill_id:id,
+      material:sk.criteria.material||0,practice:sk.criteria.practice||0,
+      project:sk.criteria.project||0,explanation:sk.criteria.explanation||0,
+      updated_at:new Date().toISOString()
+    }));
+    if(skillRows.length)await sb.from('skill_progress').upsert(skillRows);
+    const mRows=[];
+    for(const[sid,ms]of Object.entries(MISSIONS_PROGRESS)){
+      for(const[mid,mp]of Object.entries(ms)){
+        mRows.push({user_id:uid,skill_id:sid,mission_id:mid,
+          logrables:mp.logrables,completed_at:mp.completedAt||null});
+      }
+    }
+    if(mRows.length)await sb.from('mission_progress').upsert(mRows);
+    await sb.from('xp_data').upsert({
+      user_id:uid,total:XP_DATA.total,today:XP_DATA.today,
+      today_date:XP_DATA.todayDate||new Date().toISOString().slice(0,10),
+      log:XP_DATA.log.slice(-100),updated_at:new Date().toISOString()
+    });
+    await sb.from('streak_data').upsert({
+      user_id:uid,current_streak:STREAK_DATA.current,best_streak:STREAK_DATA.best,
+      last_study_date:STREAK_DATA.lastStudyDate||null,
+      log:STREAK_DATA.log.slice(-365),updated_at:new Date().toISOString()
+    });
+    updateSyncBadge('synced');
+  }catch(e){console.warn('Supabase push error',e);}
+}
+
+// Debounced push — avoids hammering the API on rapid changes
+let _sbPushTimer=null;
+function schedulePush(){
+  clearTimeout(_sbPushTimer);
+  _sbPushTimer=setTimeout(pushToSupabase,2000);
+}
+
+/* ═══════════════════════════════════
    STREAK ENGINE
 ═══════════════════════════════════ */
 const STREAK_KEY='life_streak';
@@ -4133,6 +4394,7 @@ function loadMissions(){
 }
 function saveMissions(){
   try{localStorage.setItem(MISSIONS_PROGRESS_KEY,JSON.stringify(MISSIONS_PROGRESS));}catch(e){}
+schedulePush();
 }
 
 function getMissionProgress(skillId,missionId){
@@ -4224,7 +4486,7 @@ function startMissionPomo(skillId,missionId,kind){
 ═══════════════════════════════════ */
 const SKILLS_PROGRESS_KEY='life_skills_progress';
 
-function saveSkillsProgress(){
+function saveSkillsProgress(){schedulePush();
   const prog={};
   for(const[id,sk]of Object.entries(SKILLS_DATA)) prog[id]=sk.criteria;
   try{localStorage.setItem(SKILLS_PROGRESS_KEY,JSON.stringify(prog));}catch(e){}
@@ -4687,7 +4949,27 @@ function beepPomo(){
 }
 
 // Resume on page load
-window.addEventListener('load',()=>{loadSettings();loadSkillsProgress();loadMissions();loadPomo();loadXP();loadStreak();updateProjectsUI();renderDayBlocks();});
+// ── APP INIT SEQUENCE ─────────────────────────────
+function initApp(){
+  loadSkillsProgress();
+  loadMissions();
+  loadPomo();
+  loadXP();
+  loadStreak();
+  updateProjectsUI();
+  renderDayBlocks();
+  updateXPStrip();
+  updateStreakUI();
+}
+
+window.addEventListener('load',()=>{
+  initSupabase();
+  loadSettings();  // apply theme/font immediately
+  checkAuthAndLoad().then(()=>{
+    // initApp() is called inside checkAuthAndLoad on success
+    // or by skipAuth() — both paths covered
+  });
+});
 
 /* ═══════════ ZOOM ENGINE ═══════════ */
 let zS=1,zX=0,zY=0;
